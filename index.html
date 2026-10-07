@@ -132,13 +132,30 @@
 
     /* 4-7-8 Breathing Pulse Animation for Ambient Screensaver */
     @keyframes zenBreath {
-      0%, 100% { transform: scale(0.92); opacity: 0.18; }
-      21% { transform: scale(1.35); opacity: 0.55; } /* Inhale (4s / 19s) */
-      58% { transform: scale(1.35); opacity: 0.55; } /* Hold (7s / 19s) */
-      100% { transform: scale(0.92); opacity: 0.18; } /* Exhale (8s / 19s) */
+      0%, 100% { transform: scale(0.92); opacity: 0.2; }
+      21% { transform: scale(1.35); opacity: 0.6; } /* Inhale (4s / 19s) */
+      58% { transform: scale(1.35); opacity: 0.6; } /* Hold (7s / 19s) */
+      100% { transform: scale(0.92); opacity: 0.2; } /* Exhale (8s / 19s) */
     }
     .animate-zen-breath {
       animation: zenBreath 19s ease-in-out infinite;
+    }
+
+    /* Clean Luxury Screensaver Background: Completely hide tabletop objects, labels, chime, header and footer */
+    body.screensaver-mode header,
+    body.screensaver-mode footer,
+    body.screensaver-mode #btnChime,
+    body.screensaver-mode main > div:not(#particleZone) {
+      opacity: 0 !important;
+      transform: translateY(28px) scale(0.94);
+      pointer-events: none !important;
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body:not(.screensaver-mode) header,
+    body:not(.screensaver-mode) footer,
+    body:not(.screensaver-mode) #btnChime,
+    body:not(.screensaver-mode) main > div:not(#particleZone) {
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* UI Idle Auto-fade */
@@ -594,58 +611,117 @@
   </div>
 
   <!-- Ambient Screensaver / Focus Clock Mode (Esc or Clock Btn) -->
-  <div id="stealthOverlay" class="fixed inset-0 bg-black/35 backdrop-blur-[2px] z-40 flex flex-col items-center justify-between py-10 md:py-14 px-6 hidden select-none transition-all duration-700 cursor-pointer" title="Press Esc or click anywhere to exit">
+  <div id="stealthOverlay" class="fixed inset-0 bg-gradient-to-b from-black/55 via-black/25 to-black/65 backdrop-blur-[1.5px] z-40 flex flex-col items-center justify-between py-7 md:py-10 px-6 hidden select-none transition-all duration-700 cursor-pointer">
     
-    <!-- Top Status Pill -->
-    <div class="flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass text-xs text-gray-300 border border-white/10 shadow-lg">
-      <span class="w-2 h-2 rounded-full bg-zen-jade animate-pulse"></span>
-      <span>Sanctuary Screensaver · Rain Ambience Active</span>
-      <span class="text-gray-500">|</span>
-      <span class="text-zen-gold/90 font-mono text-[11px]">Click or Press [Esc] to Exit</span>
-    </div>
+    <!-- Subtle Cinematic Radial Vignette -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_45%,rgba(0,0,0,0.55)_100%)] pointer-events-none"></div>
 
-    <!-- Center: Clock & 4-7-8 Breathing Halo & Rotating Zen Quotes -->
-    <div class="flex flex-col items-center justify-center relative w-full max-w-xl text-center my-auto">
-      <!-- 4-7-8 Breathing Halo Glow -->
-      <div class="absolute w-72 h-72 md:w-96 md:h-96 rounded-full bg-zen-gold/15 blur-3xl animate-zen-breath pointer-events-none"></div>
-
-      <!-- Time Display -->
-      <div id="clockTime" class="mono-num text-7xl sm:text-8xl md:text-9xl font-light text-white drop-shadow-[0_4px_35px_rgba(240,206,125,0.35)] tracking-tight relative z-10 transition-transform duration-300">
-        12:00:00
+    <!-- Top Bar: Minimalist Luxury Status & Controls -->
+    <div class="w-full max-w-5xl flex items-center justify-between z-10 px-2 sm:px-4">
+      <!-- Left: Brand & Focus Tag -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-6 h-6 rounded-lg liquid-glass flex items-center justify-center text-zen-gold text-[10px] shadow-sm">
+          ☯
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-medium tracking-wider text-white">KarmaDesk</span>
+          <span class="text-[9px] px-2 py-0.5 rounded-full liquid-glass text-zen-gold border border-zen-gold/25 uppercase tracking-widest hidden sm:inline-block">Sanctuary Mode</span>
+        </div>
       </div>
 
-      <!-- Date Display -->
-      <div id="clockDate" class="text-xs sm:text-sm md:text-base font-medium uppercase tracking-[0.25em] text-zen-gold/90 mt-4 serif-title relative z-10">
+      <!-- Center: Ambient Rain Status (Clickable Toggle) -->
+      <button id="screensaverRainBtn" class="liquid-glass flex items-center gap-2 px-3.5 py-1 rounded-full text-xs text-gray-200 hover:text-white transition-all cursor-pointer shadow-sm" title="Toggle outdoor mountain rain">
+        <span id="screensaverRainDot" class="w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse"></span>
+        <span id="screensaverRainText" class="font-medium text-[11px] tracking-wide">Outdoor Rain: Active</span>
+      </button>
+
+      <!-- Right: Sleek Return to Desk Button -->
+      <button id="exitScreensaverBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-zen-gold/90 hover:text-white transition-all cursor-pointer hover:border-zen-gold/50 shadow-sm" title="Return to desk (Esc)">
+        <span class="text-[11px] tracking-wider uppercase font-medium">Return</span>
+        <kbd class="px-1 py-0.2 rounded bg-white/10 font-mono text-[9px] text-gray-300">Esc</kbd>
+      </button>
+    </div>
+
+    <!-- Center Zone: Atmospheric Clock, 4-7-8 Breathing Orb & Zen Quote -->
+    <div class="flex flex-col items-center justify-center relative w-full max-w-2xl text-center my-auto z-10">
+      
+      <!-- Multi-layer Breathing Aura Glow -->
+      <div id="screensaverAura" class="absolute w-80 h-80 md:w-[480px] md:h-[480px] rounded-full bg-zen-gold/15 blur-3xl animate-zen-breath pointer-events-none transition-all duration-700"></div>
+
+      <!-- Horology Luxury Digital Clock -->
+      <div class="relative flex items-baseline justify-center gap-2.5 sm:gap-4 transition-transform duration-300" id="clockWrapper">
+        <div id="clockHoursMinutes" class="mono-num text-7xl sm:text-8xl md:text-9xl font-light text-white drop-shadow-[0_4px_45px_rgba(240,206,125,0.35)] tracking-tight">
+          22:10
+        </div>
+        <div class="flex flex-col items-start justify-center pb-2 sm:pb-3">
+          <span id="clockSeconds" class="mono-num text-xl sm:text-3xl font-light text-zen-gold drop-shadow-[0_0_15px_rgba(240,206,125,0.5)] tracking-widest">
+            37
+          </span>
+          <span class="text-[9px] font-mono text-zen-gold/60 uppercase tracking-widest leading-none">SEC</span>
+        </div>
+      </div>
+
+      <!-- Date Display in Traditional Spaced Serif -->
+      <div id="clockDate" class="text-xs sm:text-sm md:text-base font-medium uppercase tracking-[0.3em] text-zen-gold/90 mt-2 serif-title">
         Wednesday, October 7 · Desk Sanctuary
       </div>
 
-      <!-- 4-7-8 Breathing Guide Pill -->
-      <div id="breathGuideBadge" class="inline-flex items-center gap-2 mt-5 px-4 py-1 rounded-full liquid-glass border border-zen-gold/30 text-zen-gold/85 text-[11px] tracking-widest uppercase font-mono relative z-10 shadow-md">
-        <span class="w-1.5 h-1.5 rounded-full bg-zen-gold animate-ping"></span>
-        <span id="breathPhaseText">4-7-8 Breathing · Inhale (4s)</span>
+      <!-- High-End 4-7-8 Dynamic Breathing Rhythm Capsule -->
+      <div class="mt-6 sm:mt-7 flex flex-col items-center">
+        <div class="flex items-center gap-3 px-5 py-2 rounded-full liquid-glass border border-zen-gold/30 shadow-[0_4px_24px_rgba(0,0,0,0.5)] bg-black/40 backdrop-blur-xl">
+          <!-- Animated Pulsing Lotus Core -->
+          <div class="relative w-3.5 h-3.5 flex items-center justify-center">
+            <span id="breathDotPulse" class="absolute w-full h-full rounded-full bg-zen-gold/50 animate-ping"></span>
+            <span id="breathDotCore" class="w-2.5 h-2.5 rounded-full bg-zen-gold shadow-[0_0_12px_#f0ce7d]"></span>
+          </div>
+          
+          <div class="flex items-center gap-2 font-mono text-xs">
+            <span class="text-gray-400 text-[10px] uppercase tracking-wider">4-7-8 Breath:</span>
+            <span id="breathPhaseText" class="text-zen-gold font-semibold tracking-wider">Inhale · 4s</span>
+          </div>
+
+          <!-- Smooth Dynamic Rhythm Bar -->
+          <div class="w-16 sm:w-20 h-1.5 rounded-full bg-white/10 overflow-hidden relative">
+            <div id="breathProgressBar" class="h-full bg-gradient-to-r from-zen-gold to-yellow-300 rounded-full transition-all duration-300 w-1/3 shadow-[0_0_8px_#f0ce7d]"></div>
+          </div>
+        </div>
+        <p class="text-[9px] text-gray-400/80 tracking-widest uppercase mt-2 font-mono">Therapeutic Mindful Rhythm</p>
       </div>
 
-      <!-- Rotating Zen Affirmation Quotes Box -->
-      <div class="mt-8 px-6 py-4 rounded-2xl liquid-glass border border-white/10 max-w-md w-full relative z-10 shadow-xl bg-black/25">
-        <p id="screensaverQuote" class="text-sm md:text-base text-gray-200 italic serif-title leading-relaxed transition-opacity duration-700">
-          "Stillness is where clarity is born."
+      <!-- Curated Editorial Zen Wisdom Card -->
+      <div class="mt-6 sm:mt-7 px-8 py-4 rounded-2xl liquid-glass border border-zen-gold/25 max-w-lg w-full relative shadow-[0_15px_40px_rgba(0,0,0,0.6)] bg-black/35 backdrop-blur-2xl">
+        <!-- Golden Corner Filigrees -->
+        <span class="absolute top-2 left-2 text-[8px] text-zen-gold/40 select-none">❖</span>
+        <span class="absolute top-2 right-2 text-[8px] text-zen-gold/40 select-none">❖</span>
+        <span class="absolute bottom-2 left-2 text-[8px] text-zen-gold/40 select-none">❖</span>
+        <span class="absolute bottom-2 right-2 text-[8px] text-zen-gold/40 select-none">❖</span>
+
+        <p id="screensaverQuote" class="text-sm sm:text-base text-gray-100 italic serif-title leading-relaxed tracking-wide transition-opacity duration-700 font-normal">
+          "Let your thoughts drift away like gentle mountain rain."
         </p>
+        
+        <div class="flex items-center justify-center gap-2 mt-2">
+          <div class="w-5 h-[1px] bg-zen-gold/40"></div>
+          <span class="text-[8px] uppercase tracking-[0.25em] text-zen-gold/80 font-mono">Zen Mind Sanctuary</span>
+          <div class="w-5 h-[1px] bg-zen-gold/40"></div>
+        </div>
       </div>
+
     </div>
 
-    <!-- Bottom Tactical Reminder -->
-    <div class="flex flex-col items-center gap-1.5 text-center text-gray-400 text-xs relative z-10">
-      <p class="flex items-center gap-2">
-        <span class="text-gray-300">Tap while resting:</span>
-        <span class="inline-flex gap-1 font-mono text-[10px] text-white">
-          <kbd class="px-1.5 py-0.5 rounded liquid-glass">1</kbd>
-          <kbd class="px-1.5 py-0.5 rounded liquid-glass">2</kbd>
-          <kbd class="px-1.5 py-0.5 rounded liquid-glass">3</kbd>
-          <kbd class="px-1.5 py-0.5 rounded liquid-glass">4</kbd>
-          <kbd class="px-2 py-0.5 rounded liquid-glass">Space</kbd>
+    <!-- Bottom Tactical Sound Resonance Bar -->
+    <div class="flex flex-col items-center gap-2 text-center text-gray-300 z-10">
+      <div class="flex items-center gap-3 px-5 py-2 rounded-full liquid-glass border border-white/10 text-xs shadow-lg bg-black/30 backdrop-blur-xl">
+        <span class="text-zen-gold font-medium text-[11px] tracking-wide">Sound Resonance:</span>
+        <span class="inline-flex gap-1.5 font-mono text-[10px] text-white">
+          <kbd class="px-2 py-0.5 rounded bg-white/10 border border-white/20 hover:border-zen-gold transition-colors">[1] Bowl</kbd>
+          <kbd class="px-2 py-0.5 rounded bg-white/10 border border-white/20 hover:border-zen-gold transition-colors">[2] Crystal</kbd>
+          <kbd class="px-2 py-0.5 rounded bg-white/10 border border-white/20 hover:border-zen-gold transition-colors">[3] Stone</kbd>
+          <kbd class="px-2 py-0.5 rounded bg-white/10 border border-white/20 hover:border-zen-gold transition-colors">[4] Chime</kbd>
+          <kbd class="px-2.5 py-0.5 rounded bg-white/10 border border-white/20 hover:border-zen-gold transition-colors">Space</kbd>
         </span>
-        <span class="text-gray-400">to resonate</span>
-      </p>
+      </div>
+      <p class="text-[10px] text-gray-400 tracking-wider">Tap keys to resonate physical acoustic frequencies · Click screen or press [Esc] to return</p>
     </div>
 
   </div>
@@ -1107,14 +1183,22 @@
         }, 600);
       }
 
-      // Ambient Screensaver Mode Clock Shimmer on Resonance
-      const clockTimeEl = document.getElementById('clockTime');
-      const stealthOverlayEl = document.getElementById('stealthOverlay');
-      if (clockTimeEl && stealthOverlayEl && !stealthOverlayEl.classList.contains('hidden')) {
-        clockTimeEl.classList.add('scale-105', 'text-zen-gold');
-        setTimeout(() => {
-          clockTimeEl.classList.remove('scale-105', 'text-zen-gold');
-        }, 320);
+      // Ambient Screensaver Mode Dynamic Aura & Clock Shimmer on Resonance
+      const clockWrapper = document.getElementById('clockWrapper');
+      const screensaverAura = document.getElementById('screensaverAura');
+      if (document.body.classList.contains('screensaver-mode')) {
+        if (clockWrapper) {
+          clockWrapper.classList.add('scale-105');
+          setTimeout(() => clockWrapper.classList.remove('scale-105'), 320);
+        }
+        if (screensaverAura) {
+          screensaverAura.style.opacity = '0.9';
+          screensaverAura.style.filter = 'drop-shadow(0 0 50px rgba(240,206,125,0.7))';
+          setTimeout(() => {
+            screensaverAura.style.opacity = '';
+            screensaverAura.style.filter = '';
+          }, 450);
+        }
       }
     }
 
@@ -1307,9 +1391,14 @@
 
     function updateClock() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString([], { hour12: false });
-      const clockTimeEl = document.getElementById('clockTime');
-      if (clockTimeEl) clockTimeEl.textContent = timeStr;
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      const clockHM = document.getElementById('clockHoursMinutes');
+      const clockSec = document.getElementById('clockSeconds');
+      if (clockHM) clockHM.textContent = `${hours}:${minutes}`;
+      if (clockSec) clockSec.textContent = seconds;
 
       const dateStr = now.toLocaleDateString('en-US', {
         weekday: 'long',
@@ -1319,16 +1408,36 @@
       const clockDateEl = document.getElementById('clockDate');
       if (clockDateEl) clockDateEl.textContent = `${dateStr} · Desk Sanctuary`;
 
-      // 4-7-8 Breathing Guide calculation (19s full cycle)
-      const cycleSec = (Date.now() / 1000) % 19;
+      // 4-7-8 Breathing Guide Dynamic Calculation (19s full cycle)
+      // Inhale: 0-4s (4s)
+      // Hold: 4-11s (7s)
+      // Exhale: 11-19s (8s)
+      const nowSec = (now.getTime() / 1000) % 19;
       const breathPhaseEl = document.getElementById('breathPhaseText');
-      if (breathPhaseEl) {
-        if (cycleSec < 4) {
-          breathPhaseEl.textContent = '4-7-8 Breathing · Inhale (4s)';
-        } else if (cycleSec < 11) {
-          breathPhaseEl.textContent = '4-7-8 Breathing · Hold (7s)';
+      const breathProgressBar = document.getElementById('breathProgressBar');
+      const breathDotPulse = document.getElementById('breathDotPulse');
+      const screensaverAura = document.getElementById('screensaverAura');
+
+      if (breathPhaseEl && breathProgressBar) {
+        if (nowSec < 4) {
+          const progress = Math.round((nowSec / 4) * 100);
+          breathPhaseEl.textContent = `Inhale · ${4 - Math.floor(nowSec)}s`;
+          breathProgressBar.style.width = `${progress}%`;
+          if (breathDotPulse) breathDotPulse.className = 'absolute w-full h-full rounded-full bg-zen-gold/70 animate-ping';
+          if (screensaverAura) screensaverAura.style.transform = `scale(${1 + (nowSec / 4) * 0.35})`;
+        } else if (nowSec < 11) {
+          const holdElapsed = nowSec - 4;
+          breathPhaseEl.textContent = `Hold Breath · ${7 - Math.floor(holdElapsed)}s`;
+          breathProgressBar.style.width = '100%';
+          if (breathDotPulse) breathDotPulse.className = 'absolute w-full h-full rounded-full bg-zen-jade/60 animate-pulse';
+          if (screensaverAura) screensaverAura.style.transform = 'scale(1.35)';
         } else {
-          breathPhaseEl.textContent = '4-7-8 Breathing · Exhale (8s)';
+          const exhaleElapsed = nowSec - 11;
+          const progress = Math.round(100 - (exhaleElapsed / 8) * 100);
+          breathPhaseEl.textContent = `Exhale Slowly · ${8 - Math.floor(exhaleElapsed)}s`;
+          breathProgressBar.style.width = `${Math.max(6, progress)}%`;
+          if (breathDotPulse) breathDotPulse.className = 'absolute w-full h-full rounded-full bg-zen-crystal/60 animate-pulse';
+          if (screensaverAura) screensaverAura.style.transform = `scale(${1.35 - (exhaleElapsed / 8) * 0.35})`;
         }
       }
     }
@@ -1338,8 +1447,9 @@
       if (isHidden) {
         updateClock();
         clockTimer = setInterval(updateClock, 1000);
+        document.body.classList.add('screensaver-mode');
         
-        // Start rotating quotes every 11 seconds
+        // Start rotating quotes every 12 seconds
         quoteRotateTimer = setInterval(() => {
           const quoteEl = document.getElementById('screensaverQuote');
           if (!quoteEl) return;
@@ -1349,7 +1459,13 @@
             quoteEl.textContent = `"${ZEN_CLOCK_QUOTES[currentScreensaverQuoteIdx]}"`;
             quoteEl.style.opacity = '1';
           }, 600);
-        }, 11000);
+        }, 12000);
+
+        // Sync screensaver rain button text with rain state
+        if (screensaverRainText && screensaverRainDot) {
+          screensaverRainText.textContent = isRaining ? 'Outdoor Rain: Active' : 'Outdoor Rain: Paused';
+          screensaverRainDot.className = isRaining ? 'w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-gray-500';
+        }
 
         stealthOverlay.classList.remove('hidden');
       } else {
@@ -1357,13 +1473,38 @@
         clearInterval(quoteRotateTimer);
         clockTimer = null;
         quoteRotateTimer = null;
+        document.body.classList.remove('screensaver-mode');
         stealthOverlay.classList.add('hidden');
       }
     }
 
     document.getElementById('stealthBtn').addEventListener('click', toggleStealth);
+
+    // Screensaver Rain & Exit Controls
+    const screensaverRainBtn = document.getElementById('screensaverRainBtn');
+    const screensaverRainText = document.getElementById('screensaverRainText');
+    const screensaverRainDot = document.getElementById('screensaverRainDot');
+    if (screensaverRainBtn) {
+      screensaverRainBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        rainToggleBtn.click();
+        const active = isRaining;
+        if (screensaverRainText) screensaverRainText.textContent = active ? 'Outdoor Rain: Active' : 'Outdoor Rain: Paused';
+        if (screensaverRainDot) screensaverRainDot.className = active ? 'w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-gray-500';
+      });
+    }
+
+    const exitScreensaverBtn = document.getElementById('exitScreensaverBtn');
+    if (exitScreensaverBtn) {
+      exitScreensaverBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleStealth();
+      });
+    }
+
     stealthOverlay.addEventListener('click', (e) => {
-      // Clicking on screensaver background returns to main desk
+      // Don't exit if clicking on interactive controls
+      if (e.target.closest('button') || e.target.closest('kbd')) return;
       toggleStealth();
     });
 
