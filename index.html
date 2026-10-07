@@ -267,65 +267,58 @@
   </div>
 
   <!-- =========================================================================
-       2. Top Center: Refined Scholar's Plaque (WISHES FULFILLED)
+       2. Top Bar: Balanced 3-Column Navigation (Plaque Centered, Zero Collision!)
        ========================================================================= -->
-  <div class="ui-fader w-full flex justify-center pt-2.5 md:pt-3.5 z-30 relative pointer-events-none">
-    <div class="pointer-events-auto flex items-center justify-center">
-      
-      <div class="relative flex flex-col items-center">
-        <!-- Dual Brass Hanging Rings -->
-        <div class="flex items-center gap-20 -mb-1">
-          <div class="w-1.5 h-2 rounded-t-sm bg-[#522919] border border-zen-gold/60"></div>
-          <div class="w-1.5 h-2 rounded-t-sm bg-[#522919] border border-zen-gold/60"></div>
-        </div>
-
-        <!-- Elegant Refined Plaque Frame -->
-        <div id="zenPlaqueEl" class="antique-plaque rounded-sm px-6 md:px-8 py-1.5 md:py-2 flex items-center justify-center cursor-pointer shadow-xl border-[#683917]" title="Click to edit your affirmation">
-          <div class="border border-zen-gold/35 px-4 md:px-6 py-0.5 rounded-[1px] flex items-center gap-2.5">
-            <span class="text-zen-gold/45 text-[8px] select-none">❖</span>
-            <span id="plaqueTextDisplay" class="text-xs md:text-sm font-semibold tracking-[0.25em] text-zen-gold drop-shadow-[0_1px_6px_rgba(240,206,125,0.5)] serif-title uppercase">
-              Wishes Fulfilled
-            </span>
-            <span class="text-zen-gold/45 text-[8px] select-none">❖</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Top Floating Glass Controls Header -->
-  <header class="ui-fader w-full max-w-5xl mx-auto px-6 -mt-8 md:-mt-10 flex items-center justify-between z-30 relative pointer-events-none">
-    <div class="flex items-center gap-2 pointer-events-auto">
-      <div class="w-7 h-7 rounded-xl liquid-glass flex items-center justify-center text-zen-gold text-xs shadow-md">
+  <header class="ui-fader w-full max-w-6xl mx-auto px-6 pt-3 flex items-center justify-between z-30 relative">
+    <!-- Left Column: Logo & Karma Counter Pill (Moved here to eliminate blocking plaque) -->
+    <div class="flex items-center gap-3 w-1/4">
+      <div class="w-8 h-8 rounded-xl liquid-glass flex items-center justify-center text-zen-gold text-xs shadow-md">
         ☯
       </div>
       <div>
-        <h1 class="text-xs font-semibold tracking-wider text-white">KarmaDesk</h1>
-        <p class="text-[10px] text-gray-400">Desk Sanctuary · Rain Ambience</p>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xs font-semibold tracking-wider text-white leading-tight">KarmaDesk</h1>
+          <div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full liquid-glass text-xs shadow-sm">
+            <span class="text-gray-300">Karma:</span>
+            <span id="counterNum" class="mono-num font-semibold text-zen-gold tracking-wider text-xs">0</span>
+          </div>
+        </div>
+        <p class="text-[9px] text-gray-400 leading-tight">Desk Sanctuary · Rain Ambience</p>
       </div>
     </div>
 
-    <!-- Right Controls: Auto-Loop, Daily Oracle, Rain, Fullscreen, Clock -->
-    <div class="flex items-center gap-2 pointer-events-auto">
-      <!-- Karma Counter -->
-      <div class="flex items-center gap-1.5 px-3 py-1 rounded-full liquid-glass text-xs">
-        <span class="text-gray-300">Karma:</span>
-        <span id="counterNum" class="mono-num font-semibold text-zen-gold tracking-wider text-xs">0</span>
+    <!-- Center Column: Refined Scholar's Plaque (Clean, isolated, never overlapped) -->
+    <div class="flex flex-col items-center justify-center flex-shrink-0">
+      <!-- Dual Brass Rings -->
+      <div class="flex items-center gap-16 -mb-1">
+        <div class="w-1.5 h-2 rounded-t-sm bg-[#522919] border border-zen-gold/60"></div>
+        <div class="w-1.5 h-2 rounded-t-sm bg-[#522919] border border-zen-gold/60"></div>
       </div>
+      <div id="zenPlaqueEl" class="antique-plaque rounded-sm px-6 py-1.5 flex items-center justify-center cursor-pointer shadow-xl border-[#683917]" title="Click to edit your affirmation">
+        <div class="border border-zen-gold/35 px-4 py-0.5 rounded-[1px] flex items-center gap-2">
+          <span class="text-zen-gold/45 text-[8px] select-none">❖</span>
+          <span id="plaqueTextDisplay" class="text-xs md:text-sm font-semibold tracking-[0.22em] text-zen-gold drop-shadow-[0_1px_6px_rgba(240,206,125,0.5)] serif-title uppercase">
+            Wishes Fulfilled
+          </span>
+          <span class="text-zen-gold/45 text-[8px] select-none">❖</span>
+        </div>
+      </div>
+    </div>
 
-      <!-- Feature 1: Auto-Loop Zen Metronome (Inspired by top Chinese Muyu apps) -->
+    <!-- Right Column: Control Action Buttons -->
+    <div class="flex items-center justify-end gap-2 w-1/3">
+      <!-- Auto Loop -->
       <button id="autoLoopBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-gray-300 hover:text-white transition-all cursor-pointer" title="Auto-Resonate loop (hands-free meditation)">
         <span id="autoLoopDot" class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
         <span id="autoLoopText">Auto: Off</span>
       </button>
 
-      <!-- Feature 2: Daily Oracle / Manifestation Card -->
+      <!-- Daily Oracle -->
       <button id="oracleBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-zen-gold hover:text-white transition-all cursor-pointer shadow-md" title="Draw today's universe affirmation card">
         <span>🎴 Oracle</span>
       </button>
 
-      <!-- Rain Ambience Toggle (2.5s Smooth Fade In/Out) -->
+      <!-- Rain Ambience -->
       <button id="rainToggleBtn" class="liquid-glass flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs text-gray-200 cursor-pointer" title="Toggle gentle mountain rain (2.5s smooth fade)">
         <svg id="rainIcon" class="w-3.5 h-3.5 text-zen-jade" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>
@@ -335,14 +328,14 @@
         <span id="fadeBadge" class="text-[9px] px-1 py-0.2 rounded bg-zen-jade/20 text-zen-jade hidden">Fade</span>
       </button>
 
-      <!-- Zen Screensaver Mode (F Key) -->
+      <!-- Screensaver -->
       <button id="focusModeBtn" class="liquid-glass p-2 rounded-full text-gray-300 hover:text-white transition-all text-xs" title="Zen Screensaver Mode (Press F)">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
         </svg>
       </button>
 
-      <!-- Focus Clock (Esc Key) -->
+      <!-- Focus Clock -->
       <button id="stealthBtn" class="liquid-glass p-2 rounded-full text-gray-300 hover:text-white transition-all text-xs" title="Focus Clock (Esc)">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
@@ -403,7 +396,7 @@
           <div class="w-full h-full bg-gradient-to-b from-[#e2ba72] to-transparent rounded-full"></div>
         </div>
 
-        <button id="btnBowl" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="Strike singing bowl or press [1]: 432Hz Harmonic Resonance (Peace +1)">
+        <button id="btnBowl" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="Strike singing bowl or press [1]: Deep Om Harmonic Resonance (Peace +1)">
           <svg class="w-36 h-36 md:w-44 md:h-44 drop-shadow-[0_15px_30px_rgba(243,207,122,0.3)]" viewBox="0 0 200 200" fill="none">
             <defs>
               <radialGradient id="bIn" cx="50%" cy="30%" r="65%">
@@ -428,8 +421,8 @@
             <ellipse id="bowlWaterRipple" class="transition-opacity duration-300 opacity-20" cx="100" cy="94" rx="48" ry="10" stroke="#faecc8" stroke-width="1.5"/>
           </svg>
           <div class="text-center mt-0.5">
-            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-gold transition-colors">[1] 432Hz Singing Bowl</p>
-            <p class="text-[10px] text-gray-300">Peace +1 · Serene Resonance</p>
+            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-gold transition-colors">[1] Tibetan Singing Bowl</p>
+            <p class="text-[10px] text-gray-300">Peace +1 · Deep Om Resonance</p>
           </div>
         </button>
       </div>
@@ -612,25 +605,27 @@
       return audioCtx;
     }
 
-    // 432Hz Tibetan Singing Bowl (Warm bronze resonance)
+    // Authentic Tibetan Singing Bowl (Deep 136.1Hz Earth/Om Resonance with acoustic beating)
     function playSingingBowl() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
+
+      // Authentic hand-hammered heavy bronze bowl harmonics & acoustic binaural beating (~1.7Hz theta wave pulse)
       const harmonics = [
-        { freq: 432, gain: 0.65, decay: 5.5 },
-        { freq: 864, gain: 0.28, decay: 4.2 },
-        { freq: 1296, gain: 0.14, decay: 2.8 },
-        { freq: 2160, gain: 0.05, decay: 1.8 }
+        { freq: 136.1, gain: 0.72, decay: 7.5 },  // Grounding deep fundamental (Om frequency C#3)
+        { freq: 137.8, gain: 0.50, decay: 7.2 },  // Natural acoustic beating mode (creates soothing pulsation)
+        { freq: 374.5, gain: 0.22, decay: 5.2 },  // Singing throat overtone
+        { freq: 738.0, gain: 0.08, decay: 3.2 }   // Gentle upper rim shimmer
       ];
 
       harmonics.forEach(h => {
         const osc = ctx.createOscillator();
         const gainNode = ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(h.freq + (Math.random() - 0.5) * 1.2, now);
-        
+        osc.frequency.setValueAtTime(h.freq, now);
+
         gainNode.gain.setValueAtTime(0.0001, now);
-        gainNode.gain.exponentialRampToValueAtTime(h.gain, now + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(h.gain, now + 0.035);
         gainNode.gain.exponentialRampToValueAtTime(0.0001, now + h.decay);
 
         osc.connect(gainNode);
@@ -639,6 +634,27 @@
         osc.start(now);
         osc.stop(now + h.decay + 0.1);
       });
+
+      // Soft felt/wood padded mallet strike contact thud
+      const mallet = ctx.createOscillator();
+      const malletGain = ctx.createGain();
+      const malletFilter = ctx.createBiquadFilter();
+      malletFilter.type = 'lowpass';
+      malletFilter.frequency.setValueAtTime(220, now);
+
+      mallet.type = 'sine';
+      mallet.frequency.setValueAtTime(140, now);
+      mallet.frequency.exponentialRampToValueAtTime(80, now + 0.05);
+
+      malletGain.gain.setValueAtTime(0.35, now);
+      malletGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+      mallet.connect(malletFilter);
+      malletFilter.connect(malletGain);
+      malletGain.connect(ctx.destination);
+
+      mallet.start(now);
+      mallet.stop(now + 0.07);
     }
 
     // Amethyst Crystal Chime (Warm pentatonic sweet bell chime)
@@ -672,45 +688,56 @@
       });
     }
 
-    // Zen River Stone (Deep earthy stone-on-stone contact thud)
+    // Zen River Stone (Authentic, solid, tactile mineral stone-on-wood tap)
     function playRiverStone() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
 
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(115, now);
-      osc.frequency.exponentialRampToValueAtTime(45, now + 0.15);
-
-      gain.gain.setValueAtTime(0.55, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.25);
-
-      const bufferSize = ctx.sampleRate * 0.04;
+      // 1. Sharp mineral impact click (high density transient)
+      const bufferSize = Math.floor(ctx.sampleRate * 0.025);
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.18));
       }
-      const noise = ctx.createBufferSource();
-      noise.buffer = buffer;
-      const noiseFilter = ctx.createBiquadFilter();
-      noiseFilter.type = 'bandpass';
-      noiseFilter.frequency.setValueAtTime(650, now);
+      const clickSource = ctx.createBufferSource();
+      clickSource.buffer = buffer;
+      const clickFilter = ctx.createBiquadFilter();
+      clickFilter.type = 'bandpass';
+      clickFilter.frequency.setValueAtTime(1100, now);
+      clickFilter.Q.setValueAtTime(3.5, now);
 
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.18, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+      const clickGain = ctx.createGain();
+      clickGain.gain.setValueAtTime(0.5, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
 
-      noise.connect(noiseFilter);
-      noiseFilter.connect(noiseGain);
-      noiseGain.connect(ctx.destination);
-      noise.start(now);
+      clickSource.connect(clickFilter);
+      clickFilter.connect(clickGain);
+      clickGain.connect(ctx.destination);
+      clickSource.start(now);
+
+      // 2. Heavy mineral stone body resonance (dry non-harmonic thuds, zero electronic pitch-slides)
+      const stoneModes = [
+        { freq: 320, gain: 0.45, decay: 0.08 },
+        { freq: 560, gain: 0.28, decay: 0.06 },
+        { freq: 180, gain: 0.38, decay: 0.09 } // Solid hardwood table thump
+      ];
+
+      stoneModes.forEach(m => {
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(m.freq, now);
+
+        gainNode.gain.setValueAtTime(m.gain, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + m.decay);
+
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + m.decay + 0.02);
+      });
     }
 
     // Soft, airy wind chime tinkle cascade (gentle breeze striking tuned bells)
