@@ -862,13 +862,15 @@
        ========================================================================= -->
   <script>
     // -------------------------------------------------------------
-    // (1) Web Audio API Sound Engine
+    // (1) Web Audio API Sound Engine & Physical Acoustic Models
     // -------------------------------------------------------------
     let audioCtx = null;
-    let rainSource = null;
-    let rainGain = null;
-    let isRaining = false;
+    let activeAmbientSources = [];
+    let activeAmbientGain = null;
+    let ambientPeriodicTimers = [];
+    let isAmbientPlaying = false;
     let isFading = false;
+    let currentSoundscape = localStorage.getItem('karmadesk_active_soundscape') || 'rain';
 
     function getAudioContext() {
       if (!audioCtx) {
@@ -880,17 +882,42 @@
       return audioCtx;
     }
 
-    // Authentic Tibetan Singing Bowl (Deep 136.1Hz Earth/Om Resonance with acoustic beating)
+    // Seamless Equalized Noise Buffer Generator with 0.5s Cosine Boundary Crossfade (Zero Clicks / Seams)
+    function createSeamlessBuffer(ctx, duration = 8, fillFn) {
+      const sampleRate = ctx.sampleRate;
+      const numSamples = sampleRate * duration;
+      const buffer = ctx.createBuffer(1, numSamples, sampleRate);
+      const data = buffer.getChannelData(0);
+      fillFn(data, sampleRate, numSamples);
+
+      // Cosine crossfade boundary smoothing
+      const crossSamples = Math.floor(sampleRate * 0.5);
+      for (let i = 0; i < crossSamples; i++) {
+        const t = i / crossSamples;
+        const fadeOut = Math.cos(t * Math.PI * 0.5);
+        const fadeIn = Math.sin(t * Math.PI * 0.5);
+        const head = data[i];
+        const tailIdx = numSamples - crossSamples + i;
+        const tail = data[tailIdx];
+        const blended = head * fadeIn + tail * fadeOut;
+        data[i] = blended;
+        data[tailIdx] = blended;
+      }
+      return buffer;
+    }
+
+    // 1. Authentic Tibetan Singing Bowl (136.1Hz Earth/Om frequency, dual physical beating & resonant overtones)
     function playSingingBowl() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
 
-      // Authentic hand-hammered heavy bronze bowl harmonics & acoustic binaural beating (~1.7Hz theta wave pulse)
+      // Authentic hand-hammered bronze bowl modal partials with physical binaural beating (~1.7Hz theta wave)
       const harmonics = [
-        { freq: 136.1, gain: 0.72, decay: 7.5 },  // Grounding deep fundamental (Om frequency C#3)
-        { freq: 137.8, gain: 0.50, decay: 7.2 },  // Natural acoustic beating mode (creates soothing pulsation)
-        { freq: 374.5, gain: 0.22, decay: 5.2 },  // Singing throat overtone
-        { freq: 738.0, gain: 0.08, decay: 3.2 }   // Gentle upper rim shimmer
+        { freq: 136.1, gain: 0.75, decay: 9.0 },  // Deep Om fundamental (Earth year C#3)
+        { freq: 137.8, gain: 0.55, decay: 8.5 },  // Beating partner mode (creates mesmerizing pulsations)
+        { freq: 408.3, gain: 0.28, decay: 6.5 },  // 3rd singing overtone (warm throat glow)
+        { freq: 544.4, gain: 0.16, decay: 5.0 },  // 4th harmonic
+        { freq: 816.6, gain: 0.08, decay: 3.5 }   // Silky upper rim air
       ];
 
       harmonics.forEach(h => {
@@ -910,92 +937,110 @@
         osc.stop(now + h.decay + 0.1);
       });
 
-      // Soft felt/wood padded mallet strike contact thud
+      // Wool-padded wooden mallet strike contact transient (soft organic impact thud)
       const mallet = ctx.createOscillator();
       const malletGain = ctx.createGain();
       const malletFilter = ctx.createBiquadFilter();
       malletFilter.type = 'lowpass';
-      malletFilter.frequency.setValueAtTime(220, now);
+      malletFilter.frequency.setValueAtTime(180, now);
 
       mallet.type = 'sine';
-      mallet.frequency.setValueAtTime(140, now);
-      mallet.frequency.exponentialRampToValueAtTime(80, now + 0.05);
+      mallet.frequency.setValueAtTime(120, now);
+      mallet.frequency.exponentialRampToValueAtTime(65, now + 0.06);
 
-      malletGain.gain.setValueAtTime(0.35, now);
-      malletGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      malletGain.gain.setValueAtTime(0.42, now);
+      malletGain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
 
       mallet.connect(malletFilter);
       malletFilter.connect(malletGain);
       malletGain.connect(ctx.destination);
 
       mallet.start(now);
-      mallet.stop(now + 0.07);
+      mallet.stop(now + 0.08);
     }
 
-    // Amethyst Crystal Chime (Warm pentatonic sweet bell chime)
+    // 2. Amethyst Crystal Chime (Sparkling crystalline quartz pyramid / celesta chime)
     function playCrystalChime() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
-      const notes = [1046.5, 1318.5, 1567.98, 1975.5];
+      // High-register celestial crystal bells: C7 (2093Hz), E7 (2637Hz), G7 (3136Hz), B7 (3951Hz)
+      const notes = [
+        { freq: 2093.0, delay: 0.00, gain: 0.24, decay: 3.2 },
+        { freq: 2637.0, delay: 0.02, gain: 0.18, decay: 3.5 },
+        { freq: 3136.0, delay: 0.05, gain: 0.14, decay: 3.8 },
+        { freq: 3951.0, delay: 0.08, gain: 0.10, decay: 4.0 }
+      ];
 
-      notes.forEach((freq, idx) => {
+      notes.forEach((n) => {
         const osc = ctx.createOscillator();
         const gainNode = ctx.createGain();
         const filter = ctx.createBiquadFilter();
 
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(2200, now);
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(n.freq, now);
+        filter.Q.setValueAtTime(4.0, now);
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.025);
+        osc.frequency.setValueAtTime(n.freq, now + n.delay);
 
-        const initGain = 0.22 / (idx + 1);
         gainNode.gain.setValueAtTime(0.0001, now);
-        gainNode.gain.exponentialRampToValueAtTime(initGain, now + idx * 0.025 + 0.015);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 2.5 + idx * 0.2);
+        gainNode.gain.exponentialRampToValueAtTime(n.gain, now + n.delay + 0.012);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + n.decay);
 
         osc.connect(filter);
         filter.connect(gainNode);
         gainNode.connect(ctx.destination);
 
-        osc.start(now + idx * 0.025);
-        osc.stop(now + 3.0);
+        osc.start(now + n.delay);
+        osc.stop(now + n.decay + 0.1);
       });
+
+      // Crystal mallet transient click
+      const click = ctx.createOscillator();
+      const clickGain = ctx.createGain();
+      click.type = 'sine';
+      click.frequency.setValueAtTime(4200, now);
+      clickGain.gain.setValueAtTime(0.12, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+      click.connect(clickGain);
+      clickGain.connect(ctx.destination);
+      click.start(now);
+      click.stop(now + 0.02);
     }
 
-    // Zen River Stone (Authentic, solid, tactile mineral stone-on-wood tap)
+    // 3. Zen River Stone (Heavy volcanic cobblestone tap on solid mahogany desk)
     function playRiverStone() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
 
-      // 1. Sharp mineral impact click (high density transient)
-      const bufferSize = Math.floor(ctx.sampleRate * 0.025);
+      // 1. Sharp dense mineral impact transient click
+      const bufferSize = Math.floor(ctx.sampleRate * 0.02);
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.18));
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.15));
       }
       const clickSource = ctx.createBufferSource();
       clickSource.buffer = buffer;
       const clickFilter = ctx.createBiquadFilter();
       clickFilter.type = 'bandpass';
-      clickFilter.frequency.setValueAtTime(1100, now);
-      clickFilter.Q.setValueAtTime(3.5, now);
+      clickFilter.frequency.setValueAtTime(1250, now);
+      clickFilter.Q.setValueAtTime(3.8, now);
 
       const clickGain = ctx.createGain();
-      clickGain.gain.setValueAtTime(0.5, now);
-      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+      clickGain.gain.setValueAtTime(0.65, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
 
       clickSource.connect(clickFilter);
       clickFilter.connect(clickGain);
       clickGain.connect(ctx.destination);
       clickSource.start(now);
 
-      // 2. Heavy mineral stone body resonance (dry non-harmonic thuds, zero electronic pitch-slides)
+      // 2. Heavy dense hardwood & stone body modes (firm, dry, tactile)
       const stoneModes = [
-        { freq: 320, gain: 0.45, decay: 0.08 },
-        { freq: 560, gain: 0.28, decay: 0.06 },
-        { freq: 180, gain: 0.38, decay: 0.09 } // Solid hardwood table thump
+        { freq: 160, gain: 0.55, decay: 0.09 }, // Hardwood table reflection
+        { freq: 330, gain: 0.42, decay: 0.07 }, // Mineral stone body
+        { freq: 580, gain: 0.25, decay: 0.05 }  // Stone surface click
       ];
 
       stoneModes.forEach(m => {
@@ -1015,17 +1060,18 @@
       });
     }
 
-    // Soft, airy wind chime tinkle cascade (gentle breeze striking tuned bells)
+    // 4. Eave Wind Chime (Japanese Edo Fururin pentatonic cascade under gentle breeze)
     function playWindChime() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
       
-      // Warm pentatonic cascade (A5, C6, E6, C6)
+      // Tuned Japanese pentatonic rods (A5, C6, E6, G6, B6)
       const tinkleNotes = [
-        { freq: 880.0, delay: 0.00, gain: 0.075, decay: 1.1 },
-        { freq: 1046.5, delay: 0.08, gain: 0.065, decay: 1.3 },
-        { freq: 1318.5, delay: 0.17, gain: 0.050, decay: 1.4 },
-        { freq: 1046.5, delay: 0.27, gain: 0.035, decay: 1.0 }
+        { freq: 880.0, delay: 0.00, gain: 0.085, decay: 1.4 },
+        { freq: 1046.5, delay: 0.07, gain: 0.075, decay: 1.6 },
+        { freq: 1318.5, delay: 0.15, gain: 0.060, decay: 1.8 },
+        { freq: 1567.9, delay: 0.22, gain: 0.045, decay: 2.0 },
+        { freq: 1975.5, delay: 0.31, gain: 0.035, decay: 1.6 }
       ];
 
       tinkleNotes.forEach(t => {
@@ -1033,15 +1079,15 @@
         const gainNode = ctx.createGain();
         const filter = ctx.createBiquadFilter();
 
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(1750, now);
-        filter.Q.setValueAtTime(1.5, now);
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(t.freq, now);
+        filter.Q.setValueAtTime(5.0, now);
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(t.freq + (Math.random() - 0.5) * 1.5, now + t.delay);
+        osc.frequency.setValueAtTime(t.freq + (Math.random() - 0.5) * 2, now + t.delay);
 
         gainNode.gain.setValueAtTime(0.0001, now + t.delay);
-        gainNode.gain.exponentialRampToValueAtTime(t.gain, now + t.delay + 0.012);
+        gainNode.gain.exponentialRampToValueAtTime(t.gain, now + t.delay + 0.008);
         gainNode.gain.exponentialRampToValueAtTime(0.0001, now + t.delay + t.decay);
 
         osc.connect(filter);
@@ -1053,100 +1099,237 @@
       });
     }
 
-    // Natural Rain & HD Pro Ambient Soundscapes (2.5s Smooth Fade)
+    // -------------------------------------------------------------
+    // (1.5) Unified Bulletproof Ambient Soundscape Engine (Zero Glitch / Zero Leak)
+    // -------------------------------------------------------------
     const fadeBadge = document.getElementById('fadeBadge');
-    let currentSoundscape = localStorage.getItem('karmadesk_active_soundscape') || 'rain';
 
-    function startRainWithFadeIn() {
+    // Plays a tranquil distant temple bell (Kane) for Kyoto Snow Temple
+    function playKyotoTempleBell() {
+      if (!isAmbientPlaying || currentSoundscape !== 'snow') return;
       const ctx = getAudioContext();
-      isFading = true;
-      fadeBadge.classList.remove('hidden');
-
-      const bufferSize = ctx.sampleRate * 4;
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-
-      if (currentSoundscape === 'snow') {
-        let last = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          last = (last + (0.02 * white)) / 1.02;
-          data[i] = last * 0.45;
-        }
-      } else if (currentSoundscape === 'thunder') {
-        let b0 = 0, b1 = 0, b2 = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.998 * b0 + white * 0.12;
-          b1 = 0.96 * b1 + white * 0.28;
-          b2 = 0.57 * b2 + white * 0.9;
-          const rumble = Math.sin((i / ctx.sampleRate) * Math.PI * 45) * 0.08;
-          data[i] = (b0 + b1 + b2) * 0.042 + rumble;
-        }
-      } else if (currentSoundscape === 'bamboo') {
-        let b0 = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.95 * b0 + white * 0.05;
-          const trickle = Math.sin((i / ctx.sampleRate) * Math.PI * 180) * 0.03;
-          data[i] = (b0 * 0.4) + trickle;
-        }
-      } else if (currentSoundscape === 'ocean') {
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          const t = i / ctx.sampleRate;
-          const swell = 0.5 + 0.5 * Math.sin(t * Math.PI * 0.5);
-          data[i] = white * 0.035 * swell;
-        }
-      } else {
-        let b0 = 0, b1 = 0, b2 = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.99765 * b0 + white * 0.085;
-          b1 = 0.96300 * b1 + white * 0.25;
-          b2 = 0.57000 * b2 + white * 0.9;
-          data[i] = (b0 + b1 + b2) * 0.038;
-        }
-      }
-
-      rainSource = ctx.createBufferSource();
-      rainSource.buffer = buffer;
-      rainSource.loop = true;
-
-      rainGain = ctx.createGain();
       const now = ctx.currentTime;
-      rainGain.gain.setValueAtTime(0.0001, now);
-      rainGain.gain.exponentialRampToValueAtTime(0.18, now + 2.5);
-
-      rainSource.connect(rainGain);
-      rainGain.connect(ctx.destination);
-      rainSource.start();
-
-      setTimeout(() => {
-        isFading = false;
-        fadeBadge.classList.add('hidden');
-      }, 2500);
+      const bellModes = [
+        { freq: 92.5, gain: 0.20, decay: 11.0 }, // Deep cedar bronze fundamental
+        { freq: 185.0, gain: 0.12, decay: 9.0 },
+        { freq: 277.5, gain: 0.07, decay: 7.0 },
+        { freq: 462.5, gain: 0.03, decay: 4.5 }
+      ];
+      bellModes.forEach(b => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(b.freq, now);
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(b.gain, now + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + b.decay);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + b.decay + 0.1);
+      });
     }
 
-    function stopRainWithFadeOut() {
+    // Plays a realistic distant rolling thunder for Midnight Thunder
+    function playMidnightThunderRumble() {
+      if (!isAmbientPlaying || currentSoundscape !== 'thunder') return;
       const ctx = getAudioContext();
-      if (!rainGain || !rainSource) return;
-
-      isFading = true;
-      fadeBadge.classList.remove('hidden');
-
       const now = ctx.currentTime;
-      rainGain.gain.setValueAtTime(rainGain.gain.value, now);
-      rainGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+      const dur = 4.5;
+      const bufferSize = Math.floor(ctx.sampleRate * dur);
+      const buf = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const t = i / ctx.sampleRate;
+        const envelope = Math.sin((t / dur) * Math.PI) * (1 - t / dur);
+        const white = Math.random() * 2 - 1;
+        last = (last + (0.015 * white)) / 1.015;
+        d[i] = last * envelope * 2.8;
+      }
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(75, now);
+      filter.Q.setValueAtTime(2.5, now);
+
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.linearRampToValueAtTime(0.35, now + 1.2);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+
+      src.connect(filter);
+      filter.connect(g);
+      g.connect(ctx.destination);
+      src.start(now);
+      src.stop(now + dur + 0.1);
+    }
+
+    // Master Soundscape Starter
+    function startAmbientSound(soundKey = currentSoundscape, fadeSec = 2.0) {
+      const ctx = getAudioContext();
+      stopAmbientSound(0.05); // Cleanly and immediately purge any prior playing sound
+
+      isAmbientPlaying = true;
+      currentSoundscape = soundKey;
+      if (fadeBadge) fadeBadge.classList.remove('hidden');
+
+      const masterGain = ctx.createGain();
+      const now = ctx.currentTime;
+      masterGain.gain.setValueAtTime(0.0001, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.20, now + fadeSec);
+      masterGain.connect(ctx.destination);
+      activeAmbientGain = masterGain;
+
+      // 1. Generate Seamless Equalized Noise Layer (8s seamless crossfade)
+      const noiseBuffer = createSeamlessBuffer(ctx, 8, (data, sRate, total) => {
+        if (soundKey === 'snow') {
+          // Kyoto Snow: Soft whispering winter wind breeze
+          let last = 0;
+          for (let i = 0; i < total; i++) {
+            const white = Math.random() * 2 - 1;
+            last = (last + (0.02 * white)) / 1.02;
+            data[i] = last * 0.40;
+          }
+        } else if (soundKey === 'thunder') {
+          // Midnight Thunder: Lush heavy rainfall bed
+          let b0 = 0, b1 = 0, b2 = 0;
+          for (let i = 0; i < total; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.998 * b0 + white * 0.11;
+            b1 = 0.96 * b1 + white * 0.28;
+            b2 = 0.57 * b2 + white * 0.9;
+            data[i] = (b0 + b1 + b2) * 0.045;
+          }
+        } else if (soundKey === 'bamboo') {
+          // Bamboo Brook: Flowing mountain water stream
+          let b0 = 0;
+          for (let i = 0; i < total; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.96 * b0 + white * 0.04;
+            data[i] = b0 * 0.38;
+          }
+        } else if (soundKey === 'ocean') {
+          // Deep Ocean Tide: Oceanic surf wash
+          let b0 = 0, b1 = 0;
+          for (let i = 0; i < total; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.997 * b0 + white * 0.08;
+            b1 = 0.96 * b1 + white * 0.24;
+            data[i] = (b0 + b1) * 0.040;
+          }
+        } else {
+          // Default: Spring Mountain Rain (Natural pink noise)
+          let b0 = 0, b1 = 0, b2 = 0;
+          for (let i = 0; i < total; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99765 * b0 + white * 0.085;
+            b1 = 0.96300 * b1 + white * 0.25;
+            b2 = 0.57000 * b2 + white * 0.9;
+            data[i] = (b0 + b1 + b2) * 0.038;
+          }
+        }
+      });
+
+      const noiseSrc = ctx.createBufferSource();
+      noiseSrc.buffer = noiseBuffer;
+      noiseSrc.loop = true;
+      activeAmbientSources.push(noiseSrc);
+
+      // Filtering specific to soundscape
+      const filter = ctx.createBiquadFilter();
+      if (soundKey === 'snow') {
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(360, now);
+        noiseSrc.connect(filter);
+        filter.connect(masterGain);
+      } else if (soundKey === 'thunder') {
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1400, now);
+        noiseSrc.connect(filter);
+        filter.connect(masterGain);
+      } else if (soundKey === 'bamboo') {
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(650, now);
+        filter.Q.setValueAtTime(3.2, now);
+        noiseSrc.connect(filter);
+        filter.connect(masterGain);
+      } else if (soundKey === 'ocean') {
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(380, now);
+        noiseSrc.connect(filter);
+        filter.connect(masterGain);
+
+        // Slow 9s ocean tide swell LFO (breathe in & out)
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.frequency.setValueAtTime(0.11, now); // ~9s wave swell
+        lfoGain.gain.setValueAtTime(320, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(filter.frequency);
+        lfo.start(now);
+        activeAmbientSources.push(lfo);
+      } else {
+        // Rain
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1150, now);
+        noiseSrc.connect(filter);
+        filter.connect(masterGain);
+      }
+
+      noiseSrc.start(now);
+
+      // Setup periodic ambient elements (Temple bell for snow, rolling thunder for storm)
+      ambientPeriodicTimers.forEach(t => clearInterval(t));
+      ambientPeriodicTimers = [];
+
+      if (soundKey === 'snow') {
+        setTimeout(playKyotoTempleBell, 2500);
+        const t = setInterval(playKyotoTempleBell, 22000);
+        ambientPeriodicTimers.push(t);
+      } else if (soundKey === 'thunder') {
+        setTimeout(playMidnightThunderRumble, 3500);
+        const t = setInterval(playMidnightThunderRumble, 19000);
+        ambientPeriodicTimers.push(t);
+      }
 
       setTimeout(() => {
-        rainSource?.stop();
-        rainSource?.disconnect();
-        rainSource = null;
-        rainGain = null;
-        isFading = false;
-        fadeBadge.classList.add('hidden');
-      }, 2600);
+        if (fadeBadge) fadeBadge.classList.add('hidden');
+      }, fadeSec * 1000);
+    }
+
+    // Master Soundscape Stopper — GUARANTEED TO SHUT OFF ALL AUDIO 100% OF THE TIME
+    function stopAmbientSound(fadeSec = 0.5) {
+      ambientPeriodicTimers.forEach(t => clearInterval(t));
+      ambientPeriodicTimers = [];
+
+      isAmbientPlaying = false;
+      if (fadeBadge) fadeBadge.classList.remove('hidden');
+
+      const nodesToStop = [...activeAmbientSources];
+      const gainToRamp = activeAmbientGain;
+      activeAmbientSources = [];
+      activeAmbientGain = null;
+
+      if (gainToRamp) {
+        try {
+          const ctx = getAudioContext();
+          const now = ctx.currentTime;
+          gainToRamp.gain.setValueAtTime(gainToRamp.gain.value, now);
+          gainToRamp.gain.linearRampToValueAtTime(0.0001, now + fadeSec);
+        } catch(e) {}
+      }
+
+      setTimeout(() => {
+        nodesToStop.forEach(node => {
+          try {
+            node.stop();
+            node.disconnect();
+          } catch(e) {}
+        });
+        if (fadeBadge) fadeBadge.classList.add('hidden');
+      }, (fadeSec + 0.05) * 1000);
     }
 
     // -------------------------------------------------------------
@@ -1237,7 +1420,7 @@
         }
       }
       draw() {
-        ctx2d.strokeStyle = `rgba(205, 235, 225, ${this.opacity})`;
+        ctx2d.strokeStyle = 'rgba(205, 235, 225, ' + this.opacity + ')';
         ctx2d.lineWidth = this.width;
         ctx2d.beginPath();
         ctx2d.moveTo(this.x, this.y);
@@ -1252,33 +1435,81 @@
       for (let i = 0; i < dropCount; i++) raindrops.push(new Raindrop());
     }
 
-    function renderRain() {
-      ctx2d.clearRect(0, 0, canvas.width, canvas.height);
-      if (isRaining) {
-        raindrops.forEach(drop => { drop.update(); drop.draw(); });
-        animId = requestAnimationFrame(renderRain);
+    function startRainCanvas() {
+      if (animId) cancelAnimationFrame(animId);
+      initRain();
+      function loop() {
+        ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+        if (isAmbientPlaying) {
+          raindrops.forEach(drop => { drop.update(); drop.draw(); });
+          animId = requestAnimationFrame(loop);
+        } else {
+          animId = null;
+        }
       }
+      animId = requestAnimationFrame(loop);
+    }
+
+    function stopRainCanvas() {
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+      ctx2d.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     const rainToggleBtn = document.getElementById('rainToggleBtn');
     const rainBtnText = document.getElementById('rainBtnText');
 
-    rainToggleBtn.addEventListener('click', () => {
-      isRaining = !isRaining;
-      if (isRaining) {
-        rainToggleBtn.classList.add('border-zen-jade', 'text-zen-jade');
-        rainBtnText.textContent = 'Mute';
-        startRainWithFadeIn();
-        initRain();
-        renderRain();
+    function toggleAudio() {
+      if (isAmbientPlaying) {
+        stopAmbientSound(0.5);
+        stopRainCanvas();
+        updateAudioButtonUI(false);
       } else {
-        rainToggleBtn.classList.remove('border-zen-jade', 'text-zen-jade');
-        rainBtnText.textContent = 'Rain';
-        stopRainWithFadeOut();
+        startAmbientSound(currentSoundscape, 1.8);
+        startRainCanvas();
+        updateAudioButtonUI(true);
       }
-    });
+    }
 
-    // -------------------------------------------------------------
+    function updateAudioButtonUI(active) {
+      if (rainToggleBtn) {
+        if (active) {
+          rainToggleBtn.classList.add('border-zen-jade', 'text-zen-jade');
+          if (rainBtnText) rainBtnText.textContent = 'Mute';
+        } else {
+          rainToggleBtn.classList.remove('border-zen-jade', 'text-zen-jade');
+          const labels = {
+            rain: 'Rain',
+            snow: 'Snow',
+            thunder: 'Thunder',
+            bamboo: 'Bamboo',
+            ocean: 'Ocean'
+          };
+          if (rainBtnText) rainBtnText.textContent = labels[currentSoundscape] || 'Rain';
+        }
+      }
+
+      const screensaverRainText = document.getElementById('screensaverRainText');
+      const screensaverRainDot = document.getElementById('screensaverRainDot');
+      if (screensaverRainText && screensaverRainDot) {
+        const labels = {
+          rain: 'Outdoor Rain',
+          snow: 'Kyoto Snow',
+          thunder: 'Night Thunder',
+          bamboo: 'Bamboo Brook',
+          ocean: 'Deep Ocean'
+        };
+        const title = labels[currentSoundscape] || 'Outdoor Rain';
+        screensaverRainText.textContent = active ?  : ;
+        screensaverRainDot.className = active ? 'w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-gray-500';
+      }
+    }
+
+    rainToggleBtn.addEventListener('click', toggleAudio);
+
+        // -------------------------------------------------------------
     // (4) Plaque Synchronization & Resonant Affirmation Feedback
     // -------------------------------------------------------------
     let tapTotal = parseInt(localStorage.getItem('karmadesk_v10_taps') || '0', 10);
@@ -1686,21 +1917,10 @@
         localStorage.setItem('karmadesk_active_soundscape', sound);
         updateSoundscapeUI();
 
-        // Update button text
-        const labels = {
-          rain: 'Rain',
-          snow: 'Snow',
-          thunder: 'Thunder',
-          bamboo: 'Bamboo',
-          ocean: 'Ocean'
-        };
-        if (rainBtnText) rainBtnText.textContent = labels[sound] || 'Rain';
-
-        // If currently playing, crossfade into new soundscape
-        if (isRaining) {
-          stopRainWithFadeOut();
-          setTimeout(startRainWithFadeIn, 1200);
+        if (isAmbientPlaying) {
+          startAmbientSound(sound, 1.2);
         }
+        updateAudioButtonUI(isAmbientPlaying);
       });
     });
 
@@ -1866,15 +2086,10 @@
 
     // Screensaver Rain & Exit Controls
     const screensaverRainBtn = document.getElementById('screensaverRainBtn');
-    const screensaverRainText = document.getElementById('screensaverRainText');
-    const screensaverRainDot = document.getElementById('screensaverRainDot');
     if (screensaverRainBtn) {
       screensaverRainBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        rainToggleBtn.click();
-        const active = isRaining;
-        if (screensaverRainText) screensaverRainText.textContent = active ? 'Outdoor Rain: Active' : 'Outdoor Rain: Paused';
-        if (screensaverRainDot) screensaverRainDot.className = active ? 'w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-gray-500';
+        toggleAudio();
       });
     }
 
