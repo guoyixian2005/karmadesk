@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="h-full">
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KarmaDesk — 轩窗雨霁 · 案头茶席</title>
-  <meta name="description" content="一堂古韵，对开推窗观山雨。堂上清雅金匾，案头陈列颂钵、紫晶、溪石、木檐悬铃。三维纵深推窗，细雨斜织于窗外，声波激荡，愿随声应。">
+  <title>KarmaDesk — Minimalist Zen Desk Sanctuary</title>
+  <meta name="description" content="An aesthetic minimalist desk sanctuary with 3D open lattice window, serene rain ambience, and sacred tactile sound healing objects.">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -50,19 +50,22 @@
     }
   </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
     
     body {
-      font-family: 'Noto Serif SC', serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       user-select: none;
       -webkit-user-select: none;
       background-color: #060403;
+    }
+    .serif-title {
+      font-family: 'Playfair Display', serif;
     }
     .mono-num {
       font-family: 'JetBrains Mono', monospace;
     }
 
-    /* 液态玻璃拟物风格 */
+    /* Liquid Glassmorphism Styling */
     .liquid-glass {
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(28px) saturate(190%);
@@ -84,7 +87,7 @@
       transform: scale(0.96) translateY(1px);
     }
 
-    /* 传统文人书斋小雅匾（精巧典雅，比例严格契合古建大梁） */
+    /* Traditional Scholar's Plaque (Refined Antique Aesthetic) */
     .antique-plaque {
       background: linear-gradient(135deg, #1b0e07 0%, #110703 100%);
       border: 2px solid #5a3014;
@@ -95,9 +98,7 @@
       transition: all 0.3s ease;
     }
 
-    /* -------------------------------------------------------------
-       【核心优化 1】：真实向外推开的 3D 雕花实木推窗 (3D Pushed-Open Shutters)
-       ------------------------------------------------------------- */
+    /* 3D Pushed-Open Wooden Lattice Shutters */
     .shutter-left-3d {
       transform: perspective(900px) rotateY(52deg);
       transform-origin: left center;
@@ -111,14 +112,14 @@
       transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
     }
 
-    /* 真实红木长案深邃漆光纹理 */
+    /* Deep Polished Mahogany Surface Texture */
     .mahogany-surface {
       background: 
         linear-gradient(to bottom, rgba(68, 24, 13, 0.96) 0%, rgba(32, 10, 5, 0.98) 45%, rgba(14, 4, 2, 1) 100%),
         repeating-linear-gradient(2deg, transparent, transparent 16px, rgba(0,0,0,0.25) 18px, transparent 22px);
     }
 
-    /* 物件触碰手感 */
+    /* Tactile Item Hover/Active Feedback */
     .zen-item {
       transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
     }
@@ -129,7 +130,7 @@
       transform: translateY(2px) scale(0.96) !important;
     }
 
-    /* 闲置自动淡化 UI */
+    /* UI Idle Auto-fade */
     .ui-fader {
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
@@ -148,45 +149,40 @@
 <body class="h-full flex flex-col justify-between overflow-hidden relative text-gray-100">
 
   <!-- =========================================================================
-       1. 具有真实空气纵深感的多层轩窗空间系统 (3D Depth Window & Room)
+       1. 3D Spatial Window & Atmospheric Perspective
        ========================================================================= -->
   <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden bg-[#0a0705]">
 
-    <!-- -----------------------------------------------------------------------
-         【景深轩窗框架】：带 3D 倒角内窗套、深度遮蔽与向外推开的窗扉
-         ----------------------------------------------------------------------- -->
+    <!-- Window Aperture Frame Container -->
     <div id="windowFrameContainer" class="absolute top-14 left-8 right-8 bottom-60 md:top-18 md:left-24 md:right-24 md:bottom-72 rounded-t-xl overflow-hidden border-[12px] md:border-[18px] border-[#221008] shadow-[inset_0_0_70px_rgba(0,0,0,0.92)]">
       
-      <!-- 四周窗套 3D 内折角投影与环境光遮蔽 -->
+      <!-- 3D Inner Reveal Bevel & Ambient Occlusion -->
       <div class="absolute inset-0 shadow-[inset_0_24px_50px_rgba(0,0,0,0.8),inset_24px_0_40px_rgba(0,0,0,0.7),inset_-24px_0_40px_rgba(0,0,0,0.7)] z-20 pointer-events-none"></div>
 
-      <!-- =====================================================================
-           【窗外自然视差景深空间】：极远苍山、动态云雾、中景湖泊绿林、近景竹叶
-           ===================================================================== -->
+      <!-- Natural Atmospheric Depth Parallax World -->
       <div id="depthWorld" class="absolute inset-0 w-full h-full overflow-hidden transition-transform duration-200 ease-out">
         
-        <!-- 景深第 1 层（极远景 · 苍山含黛与天色） -->
+        <!-- Depth Layer 1: Distant Mountains & Atmospheric Sky -->
         <div id="layerFarMountains" class="absolute -inset-4 bg-cover bg-center filter brightness-[0.72] contrast-[1.05] transition-transform duration-300" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2600&auto=format&fit=crop');">
           <div class="absolute inset-0 bg-gradient-to-b from-[#1c2e2a]/60 via-[#142320]/40 to-[#0e1816]/80"></div>
         </div>
 
-        <!-- 景深第 2 层（山谷流动的真实动态烟岚水雾 · Dynamic Valley Mist） -->
+        <!-- Depth Layer 2: Dynamic Drifting Mountain Mist -->
         <div class="absolute inset-0 opacity-40 animate-mist-drift-1 pointer-events-none z-2">
           <div class="w-full h-full bg-gradient-to-t from-transparent via-[#a8c9bf]/20 to-transparent blur-2xl"></div>
         </div>
 
-        <!-- 景深第 3 层（中景山麓与纯净碧水，彻底去除任何人工斑马条纹！） -->
+        <!-- Depth Layer 3: Midground Forest Ridges & Serene Deep Waters (Zero Artificial Stripes) -->
         <div id="layerMidLake" class="absolute bottom-0 left-0 right-0 h-2/3 transition-transform duration-200 z-3 pointer-events-none">
-          <!-- 纯净的大自然湖泊深水色与山脚深林，绝无任何奇怪线条 -->
           <div class="w-full h-full bg-gradient-to-t from-[#10241f]/95 via-[#16332c]/50 to-transparent"></div>
         </div>
 
-        <!-- 景深第 4 层（低空林间水汽流雾） -->
+        <!-- Depth Layer 4: Low-altitude Forest Mist -->
         <div class="absolute bottom-10 left-0 right-0 h-40 opacity-45 animate-mist-drift-2 pointer-events-none z-4">
           <div class="w-full h-full bg-gradient-to-t from-[#1b3630]/70 via-[#274d44]/30 to-transparent blur-xl"></div>
         </div>
 
-        <!-- 景深第 5 层（近景窗外青竹枝叶，近大远小对比） -->
+        <!-- Depth Layer 5: Near-window Wet Bamboo Leaves (Foreground Depth Anchor) -->
         <div id="layerNearBamboo" class="absolute -bottom-4 left-6 w-72 h-80 z-6 transition-transform duration-150 pointer-events-none drop-shadow-[0_15px_20px_rgba(0,0,0,0.8)] opacity-90 hidden sm:block">
           <svg class="w-full h-full" viewBox="0 0 280 320" fill="none">
             <path d="M40,320 Q55,180 75,60" stroke="#0a1613" stroke-width="8" stroke-linecap="round"/>
@@ -202,19 +198,15 @@
           </svg>
         </div>
 
-        <!-- 窗外琉璃微雾空气层 -->
+        <!-- Glass Atmosphere Layer -->
         <div class="absolute inset-0 bg-white/[0.015] backdrop-blur-[0.2px] z-7 pointer-events-none"></div>
 
-        <!-- 景深雨丝画布：STRICTLY 限制在窗户外景内部！带有远中近三层视差，绝无半空平地水花！ -->
+        <!-- Rain Canvas: Strictly Outdoor Window Space with Multi-depth Fall -->
         <canvas id="rainCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-8"></canvas>
 
       </div>
 
-      <!-- =====================================================================
-           【核心优化 1】：真实向外推开的 3D 雕花对开木窗 (3D Open Wooden Lattice Shutters)
-           彻底替换掉之前呆板的平面棕色长方形色块，展现由内向外的透视进深！
-           ===================================================================== -->
-      <!-- 左推窗扇（以左框为轴，朝外打开，呈 3D 侧向透视） -->
+      <!-- 3D Pushed-Open Wooden Lattice Shutters (Left & Right) -->
       <div class="shutter-left-3d absolute top-0 bottom-0 left-0 w-24 md:w-36 bg-[#2a1309] border-r-4 border-[#4d2314] shadow-2xl flex flex-col justify-around py-6 px-2 z-25 pointer-events-none">
         <div class="w-full h-24 border-2 border-[#5a2c1a] rounded flex items-center justify-center bg-[#1c0a04]/40">
           <div class="w-3/5 h-3/5 border border-[#5a2c1a]/60 flex items-center justify-center">
@@ -231,11 +223,9 @@
             <div class="w-2 h-2 rotate-45 border border-[#5a2c1a]/60"></div>
           </div>
         </div>
-        <!-- 侧边厚度与高光边线 -->
         <div class="absolute top-0 bottom-0 right-0 w-1 bg-[#6b331f]/70"></div>
       </div>
 
-      <!-- 右推窗扇（以右框为轴，朝外打开，呈 3D 侧向透视） -->
       <div class="shutter-right-3d absolute top-0 bottom-0 right-0 w-24 md:w-36 bg-[#2a1309] border-l-4 border-[#4d2314] shadow-2xl flex flex-col justify-around py-6 px-2 z-25 pointer-events-none">
         <div class="w-full h-24 border-2 border-[#5a2c1a] rounded flex items-center justify-center bg-[#1c0a04]/40">
           <div class="w-3/5 h-3/5 border border-[#5a2c1a]/60 flex items-center justify-center">
@@ -252,24 +242,23 @@
             <div class="w-2 h-2 rotate-45 border border-[#5a2c1a]/60"></div>
           </div>
         </div>
-        <!-- 侧边厚度与高光边线 -->
         <div class="absolute top-0 bottom-0 left-0 w-1 bg-[#6b331f]/70"></div>
       </div>
 
-      <!-- 窗台外青石坎 -->
+      <!-- Outer Stone Sill -->
       <div class="absolute bottom-0 left-0 right-0 h-6 bg-[#161a18] border-t-2 border-[#242b29] shadow-inner z-20"></div>
     </div>
 
-    <!-- 室内实木大梁 -->
+    <!-- Solid Timber Header Beam -->
     <div class="absolute top-0 left-0 right-0 h-16 md:h-20 bg-gradient-to-b from-[#130502] via-[#200b05] to-[#180804] border-b-4 border-[#3d170c] shadow-[0_15px_45px_rgba(0,0,0,0.9)] z-20 flex items-center justify-between px-12">
       <div class="absolute bottom-0 left-0 right-0 h-1 bg-[#562212]/50"></div>
     </div>
 
-    <!-- 左右室内实木立柱 -->
+    <!-- Side Interior Pillars -->
     <div class="absolute top-0 bottom-60 md:bottom-72 left-0 w-8 md:w-24 bg-gradient-to-r from-[#100402] to-[#180703] z-20 border-r-2 border-[#301108]"></div>
     <div class="absolute top-0 bottom-60 md:bottom-72 right-0 w-8 md:w-24 bg-gradient-to-l from-[#100402] to-[#180703] z-20 border-l-2 border-[#301108]"></div>
 
-    <!-- 前景红木长案茶台 -->
+    <!-- Foreground Solid Mahogany Table -->
     <div class="absolute bottom-0 left-0 right-0 h-60 md:h-72 z-20 mahogany-surface border-t-[6px] border-[#612516] shadow-[0_-30px_90px_rgba(0,0,0,0.95)]">
       <div class="absolute inset-0 bg-gradient-to-b from-white/10 via-white/[0.015] to-black/70 pointer-events-none"></div>
       <div class="absolute top-3 left-10 right-10 h-52 border border-[#612516]/40 rounded pointer-events-none"></div>
@@ -278,24 +267,24 @@
   </div>
 
   <!-- =========================================================================
-       2. 顶部中央：文人书斋小雅匾（小巧克制、比例真实、契合古建大梁）
+       2. Top Center: Refined Scholar's Plaque (WISHES FULFILLED)
        ========================================================================= -->
   <div class="ui-fader w-full flex justify-center pt-2.5 md:pt-3.5 z-30 relative pointer-events-none">
     <div class="pointer-events-auto flex items-center justify-center">
       
       <div class="relative flex flex-col items-center">
-        <!-- 大梁下精细黄铜挂环 -->
+        <!-- Dual Brass Hanging Rings -->
         <div class="flex items-center gap-20 -mb-1">
           <div class="w-1.5 h-2 rounded-t-sm bg-[#522919] border border-zen-gold/60"></div>
           <div class="w-1.5 h-2 rounded-t-sm bg-[#522919] border border-zen-gold/60"></div>
         </div>
 
-        <!-- 小巧精致文人雅匾 -->
-        <div id="zenPlaqueEl" class="antique-plaque rounded-sm px-6 md:px-8 py-1.5 md:py-2 flex items-center justify-center cursor-pointer shadow-xl border-[#683917]" title="点击快速修改匾额祈愿词">
-          <div class="border border-zen-gold/35 px-4 md:px-5 py-0.5 rounded-[1px] flex items-center gap-2">
+        <!-- Elegant Refined Plaque Frame -->
+        <div id="zenPlaqueEl" class="antique-plaque rounded-sm px-6 md:px-8 py-1.5 md:py-2 flex items-center justify-center cursor-pointer shadow-xl border-[#683917]" title="Click to edit your affirmation">
+          <div class="border border-zen-gold/35 px-4 md:px-6 py-0.5 rounded-[1px] flex items-center gap-2.5">
             <span class="text-zen-gold/45 text-[8px] select-none">❖</span>
-            <span id="plaqueTextDisplay" class="text-sm md:text-base font-semibold tracking-[0.25em] text-zen-gold drop-shadow-[0_1px_6px_rgba(240,206,125,0.5)] font-serif">
-              心想事成
+            <span id="plaqueTextDisplay" class="text-xs md:text-sm font-semibold tracking-[0.25em] text-zen-gold drop-shadow-[0_1px_6px_rgba(240,206,125,0.5)] serif-title uppercase">
+              Wishes Fulfilled
             </span>
             <span class="text-zen-gold/45 text-[8px] select-none">❖</span>
           </div>
@@ -305,7 +294,7 @@
     </div>
   </div>
 
-  <!-- 顶部状态栏浮动按钮（液态玻璃） -->
+  <!-- Top Floating Glass Controls Header -->
   <header class="ui-fader w-full max-w-5xl mx-auto px-6 -mt-8 md:-mt-10 flex items-center justify-between z-30 relative pointer-events-none">
     <div class="flex items-center gap-2 pointer-events-auto">
       <div class="w-7 h-7 rounded-xl liquid-glass flex items-center justify-center text-zen-gold text-xs shadow-md">
@@ -313,36 +302,36 @@
       </div>
       <div>
         <h1 class="text-xs font-semibold tracking-wider text-white">KarmaDesk</h1>
-        <p class="text-[10px] text-gray-400">对开推窗 · 纵深雨境</p>
+        <p class="text-[10px] text-gray-400">Desk Sanctuary · Rain Ambience</p>
       </div>
     </div>
 
     <div class="flex items-center gap-2.5 pointer-events-auto">
-      <!-- 心流计数 -->
+      <!-- Karma Counter -->
       <div class="flex items-center gap-1.5 px-3 py-1 rounded-full liquid-glass text-xs">
-        <span class="text-gray-300">善念:</span>
+        <span class="text-gray-300">Mindful Karma:</span>
         <span id="counterNum" class="mono-num font-semibold text-zen-gold tracking-wider text-xs">0</span>
       </div>
 
-      <!-- 听雨观澜 -->
-      <button id="rainToggleBtn" class="liquid-glass flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs text-gray-200 cursor-pointer" title="开关窗外大自然细雨（2.5秒渐变）">
+      <!-- Rain Ambience Toggle (2.5s Smooth Fade In/Out) -->
+      <button id="rainToggleBtn" class="liquid-glass flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs text-gray-200 cursor-pointer" title="Toggle gentle mountain rain (2.5s smooth fade)">
         <svg id="rainIcon" class="w-3.5 h-3.5 text-zen-jade" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>
           <path d="M8 19v2M8 13v2M12 21v2M12 15v2M16 19v2M16 13v2"/>
         </svg>
-        <span id="rainBtnText" class="font-medium">听雨观澜</span>
-        <span id="fadeBadge" class="text-[9px] px-1 py-0.2 rounded bg-zen-jade/20 text-zen-jade hidden">渐变中</span>
+        <span id="rainBtnText" class="font-medium">Rain Ambience</span>
+        <span id="fadeBadge" class="text-[9px] px-1 py-0.2 rounded bg-zen-jade/20 text-zen-jade hidden">Fading</span>
       </button>
 
-      <!-- 纯净观雨屏保 (F 键) -->
-      <button id="focusModeBtn" class="liquid-glass p-2 rounded-full text-gray-300 hover:text-white transition-all text-xs" title="纯净观雨屏保（按 F）">
+      <!-- Zen Screensaver Mode (F Key) -->
+      <button id="focusModeBtn" class="liquid-glass p-2 rounded-full text-gray-300 hover:text-white transition-all text-xs" title="Zen Screensaver Mode (Press F)">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
         </svg>
       </button>
 
-      <!-- 防窥时钟 (Esc) -->
-      <button id="stealthBtn" class="liquid-glass p-2 rounded-full text-gray-300 hover:text-white transition-all text-xs" title="极简时钟 (Esc)">
+      <!-- Focus Clock (Esc Key) -->
+      <button id="stealthBtn" class="liquid-glass p-2 rounded-full text-gray-300 hover:text-white transition-all text-xs" title="Focus Clock (Esc)">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
         </svg>
@@ -351,19 +340,19 @@
   </header>
 
   <!-- =========================================================================
-       3. 核心交互舞台：风铃系于大梁，三法器实打实坐在红木桌面上
+       3. Main Interactive Sanctuary: Wind Chime & 3 Tabletop Sacred Objects
        ========================================================================= -->
   <main class="relative flex-1 flex flex-col justify-end items-center px-4 z-25">
     
-    <!-- 愿望显化升华粒子层 -->
+    <!-- Floating Affirmation Particle Layer -->
     <div id="particleZone" class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden"></div>
 
-    <!-- 木檐风铃：系于大梁铁钩上 -->
+    <!-- Eave Wind Chime (Firmly mounted under solid beam hook) -->
     <div class="absolute top-12 md:top-14 right-14 md:right-32 z-30 flex flex-col items-center">
       <div class="w-2.5 h-3 bg-[#2b170c] border border-[#522919] rounded-t-sm shadow-md"></div>
       <div class="w-2 h-2 rounded-full border border-zen-chime/70 -mt-1 bg-[#1a0e08]"></div>
       
-      <button id="btnChime" class="zen-item relative group flex flex-col items-center outline-none focus:outline-none cursor-pointer" title="轻触风铃或按 [4]：清风拂铃 (Focus +1)">
+      <button id="btnChime" class="zen-item relative group flex flex-col items-center outline-none focus:outline-none cursor-pointer" title="Tap wind chime or press [4]: Gentle Clarity (Focus +1)">
         <div class="w-[1.2px] h-12 bg-gradient-to-b from-[#875527] via-zen-chime to-zen-chime"></div>
         
         <div class="animate-bell-sway origin-top flex flex-col items-center drop-shadow-[0_12px_24px_rgba(247,227,170,0.4)]">
@@ -382,18 +371,19 @@
             <circle cx="24" cy="48" r="3" fill="#ffe9b0"/>
           </svg>
           <div class="w-[1px] h-4 bg-zen-chime/80"></div>
-          <div class="w-3.5 h-12 liquid-glass rounded-sm flex items-center justify-center p-0.5 shadow-lg border-zen-chime/40">
-            <span class="text-[8px] text-zen-chime font-semibold writing-mode-vertical tracking-widest">清风</span>
+          <!-- Windcatcher Slip with Subtle English Typography -->
+          <div class="w-4 h-12 liquid-glass rounded-sm flex items-center justify-center p-0.5 shadow-lg border-zen-chime/40">
+            <span class="text-[8px] text-zen-chime font-medium writing-mode-vertical tracking-widest uppercase">Zen</span>
           </div>
         </div>
-        <span class="text-[10px] text-gray-200 mt-1.5 font-medium tracking-wider group-hover:text-zen-chime transition-colors">[4] 檐下风铃</span>
+        <span class="text-[10px] text-gray-200 mt-1.5 font-medium tracking-wider group-hover:text-zen-chime transition-colors">[4] Wind Chime</span>
       </button>
     </div>
 
-    <!-- 案上三物：实打实坐在红木桌面上！带有桌面倒影 + 贴合接触阴影！ -->
+    <!-- 3 Grounded Objects on Polished Mahogany Table Surface -->
     <div class="relative w-full max-w-3xl flex items-end justify-around px-4 md:px-12 pb-4 z-30">
 
-      <!-- 1. 432Hz 铜磬颂钵（坐落于刺绣茶垫上，带红木漆光倒影） -->
+      <!-- Object 1: 432Hz Tibetan Singing Bowl -->
       <div class="relative flex flex-col items-center">
         <div class="absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-44 h-8 bg-black/90 blur-[6px] rounded-full pointer-events-none"></div>
         
@@ -401,7 +391,7 @@
           <div class="w-full h-full bg-gradient-to-b from-[#e2ba72] to-transparent rounded-full"></div>
         </div>
 
-        <button id="btnBowl" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="轻敲铜磬或按 [1]：432Hz 铜音回响 (Peace +1)">
+        <button id="btnBowl" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="Strike singing bowl or press [1]: 432Hz Harmonic Resonance (Peace +1)">
           <svg class="w-36 h-36 md:w-44 md:h-44 drop-shadow-[0_15px_30px_rgba(243,207,122,0.3)]" viewBox="0 0 200 200" fill="none">
             <defs>
               <radialGradient id="bIn" cx="50%" cy="30%" r="65%">
@@ -426,13 +416,13 @@
             <ellipse id="bowlWaterRipple" class="transition-opacity duration-300 opacity-20" cx="100" cy="94" rx="48" ry="10" stroke="#faecc8" stroke-width="1.5"/>
           </svg>
           <div class="text-center mt-0.5">
-            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-gold transition-colors">[1] 432Hz 铜磬颂钵</p>
-            <p class="text-[10px] text-gray-300">Peace +1 · 宁静空灵</p>
+            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-gold transition-colors">[1] 432Hz Singing Bowl</p>
+            <p class="text-[10px] text-gray-300">Peace +1 · Serene Resonance</p>
           </div>
         </button>
       </div>
 
-      <!-- 2. 丰盛紫黄晶石簇（稳立于红木案台，带折射微倒影） -->
+      <!-- Object 2: Amethyst Wealth Crystal -->
       <div class="relative flex flex-col items-center">
         <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-36 h-7.5 bg-black/90 blur-[5px] rounded-full pointer-events-none"></div>
         
@@ -440,7 +430,7 @@
           <div class="w-full h-full bg-gradient-to-b from-[#d8bcfc] to-transparent rounded-full"></div>
         </div>
 
-        <button id="btnCrystal" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="轻触水晶或按 [2]：清冽水晶八音阶 (Abundance +$1)">
+        <button id="btnCrystal" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="Tap crystal or press [2]: Pure Pentatonic Chimes (Abundance +$1)">
           <svg class="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_15px_30px_rgba(216,188,252,0.32)]" viewBox="0 0 200 200" fill="none">
             <defs>
               <linearGradient id="cr1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -449,7 +439,7 @@
               </linearGradient>
               <linearGradient id="cr2" x1="100%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stop-color="#d4bffa"/>
-                <stop offset="100%" stop-color="#552796"/>
+                <stop offset="50%" stop-color="#552796"/>
               </linearGradient>
               <linearGradient id="crG" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#fffef7"/>
@@ -468,13 +458,13 @@
             <circle cx="135" cy="76" r="2.5" fill="#ffffff"/>
           </svg>
           <div class="text-center mt-0.5">
-            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-crystal transition-colors">[2] 丰盛紫黄晶石</p>
-            <p class="text-[10px] text-gray-300">Abundance +$1 · 显化丰盛</p>
+            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-crystal transition-colors">[2] Amethyst Crystal</p>
+            <p class="text-[10px] text-gray-300">Abundance +$1 · Manifest Wealth</p>
           </div>
         </button>
       </div>
 
-      <!-- 3. 雨润青溪石（稳置于红木案台，带湿水反光与贴桌暗影） -->
+      <!-- Object 3: Zen River Stone -->
       <div class="relative flex flex-col items-center">
         <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-38 h-7.5 bg-black/92 blur-[5px] rounded-full pointer-events-none"></div>
         
@@ -482,7 +472,7 @@
           <div class="w-full h-full bg-gradient-to-b from-[#a8c2d8] to-transparent rounded-full"></div>
         </div>
 
-        <button id="btnStone" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="轻触溪石或按 [3]：天然青石轻叩 (Stress -1)">
+        <button id="btnStone" class="zen-item relative group outline-none focus:outline-none cursor-pointer" title="Tap river stone or press [3]: Natural Stone Tap (Stress -1)">
           <svg class="w-32 h-32 md:w-40 md:h-40 drop-shadow-[0_15px_30px_rgba(168,194,216,0.28)]" viewBox="0 0 200 200" fill="none">
             <defs>
               <radialGradient id="stWet" cx="38%" cy="30%" r="70%">
@@ -499,23 +489,23 @@
             <circle cx="85" cy="105" r="3" fill="#ffffff" opacity="0.35"/>
           </svg>
           <div class="text-center mt-0.5">
-            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-stone transition-colors">[3] 雨润青溪石</p>
-            <p class="text-[10px] text-gray-300">Stress -1 · 抚平浮躁</p>
+            <p class="text-xs font-semibold text-gray-100 group-hover:text-zen-stone transition-colors">[3] Zen River Stone</p>
+            <p class="text-[10px] text-gray-300">Stress -1 · Deep Grounding</p>
           </div>
         </button>
       </div>
 
     </div>
 
-    <!-- 底部显化愿望修改入口（与上方雅匾同步） -->
+    <!-- Affirmation Capsule Input (Synchronized with Top Plaque) -->
     <div class="ui-fader mb-1 flex flex-col items-center gap-1 z-30">
       <div class="flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass text-xs shadow-lg">
-        <span class="text-gray-300 font-medium">雅匾题字:</span>
-        <input id="customWishInput" type="text" value="心想事成" class="bg-transparent border-b border-zen-gold/60 focus:border-zen-gold outline-none px-2 py-0.5 text-center text-zen-gold font-bold w-32 tracking-wider text-sm" placeholder="输入四字题词..." title="修改后上方雅匾将实时更新，敲击时声光显化！">
-        <span class="text-[10px] text-gray-400">（敲击案上物件即可显化）</span>
+        <span class="text-gray-300 font-medium">Affirmation:</span>
+        <input id="customWishInput" type="text" value="Wishes Fulfilled" class="bg-transparent border-b border-zen-gold/60 focus:border-zen-gold outline-none px-2 py-0.5 text-center text-zen-gold font-bold w-36 tracking-wider text-sm" placeholder="Type your wish..." title="Edits the top plaque and customizes your affirmation floating text">
+        <span class="text-[10px] text-gray-400">(Tap any desk object to manifest)</span>
       </div>
       <p class="text-[10px] text-gray-400/80 flex items-center gap-2">
-        <span>按键盘键</span>
+        <span>Press keys</span>
         <span class="inline-flex gap-1 font-mono text-[10px] text-white">
           <kbd class="px-1.5 py-0.5 rounded liquid-glass">1</kbd>
           <kbd class="px-1.5 py-0.5 rounded liquid-glass">2</kbd>
@@ -523,39 +513,39 @@
           <kbd class="px-1.5 py-0.5 rounded liquid-glass">4</kbd>
           <kbd class="px-2 py-0.5 rounded liquid-glass">Space</kbd>
         </span>
-        <span>回荡祈福</span>
+        <span>to resonate</span>
       </p>
     </div>
 
   </main>
 
-  <!-- 底部说明 -->
+  <!-- Clean Footer Bar -->
   <footer class="ui-fader w-full max-w-xl mx-auto px-6 py-2.5 z-30 flex items-center justify-between text-[11px] text-gray-400">
     <div class="flex items-center gap-2">
       <span class="w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse"></span>
-      <span>空气透视视差 · 细雨落在窗外 · 2.5s 平滑雨声</span>
+      <span>Window Sanctuary · Outdoor Rain · 2.5s Audio Fade</span>
     </div>
     <div class="flex items-center gap-3">
-      <span>按 <kbd class="px-1.5 py-0.5 rounded liquid-glass font-mono text-gray-300">F</kbd> 观雨屏保</span>
-      <span>按 <kbd class="px-1.5 py-0.5 rounded liquid-glass font-mono text-gray-300">Esc</kbd> 极简时钟</span>
+      <span>Press <kbd class="px-1.5 py-0.5 rounded liquid-glass font-mono text-gray-300">F</kbd> Screensaver</span>
+      <span>Press <kbd class="px-1.5 py-0.5 rounded liquid-glass font-mono text-gray-300">Esc</kbd> Clock</span>
     </div>
   </footer>
 
-  <!-- 极简避屏时钟 (Stealth Mode) -->
-  <div id="stealthOverlay" class="fixed inset-0 bg-[#070b0a] z-50 flex flex-col items-center justify-center hidden cursor-pointer select-none" title="点击任意处或按 Esc 返回">
+  <!-- Stealth Focus Clock Overlay (Esc) -->
+  <div id="stealthOverlay" class="fixed inset-0 bg-[#070b0a] z-50 flex flex-col items-center justify-center hidden cursor-pointer select-none" title="Click anywhere or press Esc to return">
     <div class="text-center">
       <div id="clockTime" class="mono-num text-7xl md:text-8xl font-light text-gray-400 tracking-tight">12:00:00</div>
-      <div id="clockDate" class="text-sm uppercase tracking-widest text-gray-400 mt-4">Wednesday, October 7 · 轩窗观雨</div>
-      <p class="text-xs text-gray-400/50 mt-12">点击屏幕或按 [Esc] 返回禅境</p>
+      <div id="clockDate" class="text-sm uppercase tracking-widest text-gray-400 mt-4">Wednesday, October 7 · Sanctuary Focus</div>
+      <p class="text-xs text-gray-400/50 mt-12">Click screen or press [Esc] to return</p>
     </div>
   </div>
 
   <!-- =========================================================================
-       4. Web Audio API、立体视差与无水花深远雨景引擎
+       4. Web Audio API Engine & Soft Tinkling Wind Chime Logic
        ========================================================================= -->
   <script>
     // -------------------------------------------------------------
-    // (1) Web Audio API 声学引擎
+    // (1) Web Audio API Sound Engine
     // -------------------------------------------------------------
     let audioCtx = null;
     let rainSource = null;
@@ -573,7 +563,7 @@
       return audioCtx;
     }
 
-    // 432Hz 铜磬颂钵 (Tibetan Singing Bowl)
+    // 432Hz Tibetan Singing Bowl (Warm bronze resonance)
     function playSingingBowl() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
@@ -602,7 +592,7 @@
       });
     }
 
-    // 紫黄晶石簇 (Crystal Chime - 温润纯正五音阶)
+    // Amethyst Crystal Chime (Warm pentatonic sweet bell chime)
     function playCrystalChime() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
@@ -633,7 +623,7 @@
       });
     }
 
-    // 雨润青溪石 (River Stone - 天然岩石与水面轻叩低频)
+    // Zen River Stone (Deep earthy stone-on-stone contact thud)
     function playRiverStone() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
@@ -674,38 +664,48 @@
       noise.start(now);
     }
 
-    // 窗檐古铜风铃 (Wind Chime - 双管清风回响)
+    // Soft, airy wind chime tinkle cascade
+    // Soft pentatonic tinkles in gentle breeze
     function playWindChime() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
-      const chimes = [1567.98, 2093.0];
+      
+      // Tuned pentatonic chords (A5, C6, E6, C6)
+      const tinkleNotes = [
+        { freq: 880.0, delay: 0.00, gain: 0.075, decay: 1.1 },
+        { freq: 1046.5, delay: 0.08, gain: 0.065, decay: 1.3 },
+        { freq: 1318.5, delay: 0.17, gain: 0.050, decay: 1.4 },
+        { freq: 1046.5, delay: 0.27, gain: 0.035, decay: 1.0 }
+      ];
 
-      chimes.forEach((f, idx) => {
+      tinkleNotes.forEach(t => {
         const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
+        const gainNode = ctx.createGain();
         const filter = ctx.createBiquadFilter();
 
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(f, now);
-        filter.Q.setValueAtTime(8, now);
+        // Gentle lowpass filter to remove harsh shrillness
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(1750, now);
+        filter.Q.setValueAtTime(1.5, now);
 
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(f + (Math.random() - 0.5) * 2, now + idx * 0.04);
+        // Subtle organic micro-detuning
+        osc.frequency.setValueAtTime(t.freq + (Math.random() - 0.5) * 1.5, now + t.delay);
 
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.25, now + idx * 0.04 + 0.015);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2 + idx * 0.3);
+        gainNode.gain.setValueAtTime(0.0001, now + t.delay);
+        gainNode.gain.exponentialRampToValueAtTime(t.gain, now + t.delay + 0.012);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + t.delay + t.decay);
 
         osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
+        filter.connect(gainNode);
+        gainNode.connect(ctx.destination);
 
-        osc.start(now + idx * 0.04);
-        osc.stop(now + 3.8);
+        osc.start(now + t.delay);
+        osc.stop(now + t.delay + t.decay + 0.1);
       });
     }
 
-    // 自然雨声 2.5 秒平滑渐入与渐出
+    // Natural Rain Ambient 2.5s Smooth Fade
     const fadeBadge = document.getElementById('fadeBadge');
 
     function startRainWithFadeIn() {
@@ -766,7 +766,7 @@
     }
 
     // -------------------------------------------------------------
-    // (2) 鼠标微视差算法：让远山、中景、近竹产生真实空气景深
+    // (2) Mouse Micro-Parallax Spatial Perspective
     // -------------------------------------------------------------
     const layerFar = document.getElementById('layerFarMountains');
     const layerMid = document.getElementById('layerMidLake');
@@ -790,8 +790,7 @@
     });
 
     // -------------------------------------------------------------
-    // (3) 【核心优化 3】：深远无水花三维景深雨丝引擎
-    // 彻底解决“下雨为什么会有落在地面的水花、应该在外面下”的问题！
+    // (3) Natural Window Rain Stream (Zero Mid-Air Flat Splashes)
     // -------------------------------------------------------------
     const canvas = document.getElementById('rainCanvas');
     const windowFrameContainer = document.getElementById('windowFrameContainer');
@@ -812,22 +811,21 @@
         this.x = Math.random() * (canvas.width + 100) - 50;
         this.y = Math.random() * -120;
         
-        // 区分远景微雨、中景山林雨、近窗雨
         this.layer = Math.random(); 
         if (this.layer < 0.45) {
-          // 远景雨雾：极细、极淡、极慢、随风微飘
+          // Distant fine rain mist
           this.length = Math.random() * 10 + 6;
           this.speed = Math.random() * 3 + 4;
           this.opacity = Math.random() * 0.14 + 0.06;
           this.width = 0.6;
         } else if (this.layer < 0.8) {
-          // 中景山林雨：中等细密、斜掠
+          // Midground rain streaks
           this.length = Math.random() * 18 + 12;
           this.speed = Math.random() * 6 + 7;
           this.opacity = Math.random() * 0.24 + 0.12;
           this.width = 0.9;
         } else {
-          // 近景细雨：较长、较快
+          // Near-window rain
           this.length = Math.random() * 28 + 18;
           this.speed = Math.random() * 9 + 10;
           this.opacity = Math.random() * 0.38 + 0.2;
@@ -836,9 +834,7 @@
       }
       update() {
         this.y += this.speed;
-        this.x += 1.3; // 自然微风斜掠
-        
-        // 【关键改动】：雨滴穿透整个开阔外景，自然坠入底部深湖消失，绝不在半空绘制平面水花圈！
+        this.x += 1.3;
         if (this.y > canvas.height + 40) {
           this.reset();
         }
@@ -874,21 +870,21 @@
       isRaining = !isRaining;
       if (isRaining) {
         rainToggleBtn.classList.add('border-zen-jade', 'text-zen-jade');
-        rainBtnText.textContent = '雨声渐止';
+        rainBtnText.textContent = 'Mute Rain';
         startRainWithFadeIn();
         initRain();
         renderRain();
       } else {
         rainToggleBtn.classList.remove('border-zen-jade', 'text-zen-jade');
-        rainBtnText.textContent = '听雨观澜';
+        rainBtnText.textContent = 'Rain Ambience';
         stopRainWithFadeOut();
       }
     });
 
     // -------------------------------------------------------------
-    // (4) 雅匾愿望实时同步与敲击发光升华
+    // (4) Plaque Synchronization & Resonant Affirmation Feedback
     // -------------------------------------------------------------
-    let tapTotal = parseInt(localStorage.getItem('karmadesk_v8_taps') || '0', 10);
+    let tapTotal = parseInt(localStorage.getItem('karmadesk_v9_taps') || '0', 10);
     const counterDisplay = document.getElementById('counterNum');
     counterDisplay.textContent = tapTotal;
 
@@ -897,8 +893,8 @@
     const zenPlaqueEl = document.getElementById('zenPlaqueEl');
 
     function syncPlaque() {
-      const val = customWishInput.value.trim() || '心想事成';
-      plaqueTextDisplay.textContent = val;
+      const val = customWishInput.value.trim() || 'Wishes Fulfilled';
+      plaqueTextDisplay.textContent = val.toUpperCase();
     }
     customWishInput.addEventListener('input', syncPlaque);
     syncPlaque();
@@ -912,10 +908,10 @@
       soundFn();
 
       tapTotal++;
-      localStorage.setItem('karmadesk_v8_taps', tapTotal);
+      localStorage.setItem('karmadesk_v9_taps', tapTotal);
       counterDisplay.textContent = tapTotal;
 
-      // 雅匾金光微颤
+      // Soft Plaque Golden Aura Shimmer
       zenPlaqueEl.classList.add('scale-[1.04]');
       zenPlaqueEl.style.boxShadow = '0 0 30px rgba(240,206,125,0.7), inset 0 0 18px rgba(240,206,125,0.4)';
       setTimeout(() => {
@@ -952,7 +948,7 @@
       }
     }
 
-    // 绑定 4 大物件点击事件
+    // Attach Click Events to 4 Sacred Objects
     const btnBowl = document.getElementById('btnBowl');
     const btnCrystal = document.getElementById('btnCrystal');
     const btnStone = document.getElementById('btnStone');
@@ -974,7 +970,7 @@
       playWindChime, 'Focus +1', 'text-zen-chime', btnChime
     ));
 
-    // 快捷键联动：1, 2, 3, 4, Spacebar, F, Esc
+    // Keyboard Shortcuts: 1, 2, 3, 4, Spacebar, F, Esc
     window.addEventListener('keydown', (e) => {
       if (document.activeElement === customWishInput) return;
 
@@ -997,7 +993,7 @@
     });
 
     // -------------------------------------------------------------
-    // (5) 纯净观雨屏保模式 (F 键或双击空白处)
+    // (5) Zen Screensaver Mode (F Key or Double Click)
     // -------------------------------------------------------------
     function toggleFocusMode() {
       document.body.classList.toggle('zen-focus-mode');
@@ -1010,7 +1006,7 @@
     });
 
     // -------------------------------------------------------------
-    // (6) 避屏老板时钟 (Esc)
+    // (6) Stealth Focus Clock (Esc)
     // -------------------------------------------------------------
     const stealthOverlay = document.getElementById('stealthOverlay');
     let clockTimer = null;
@@ -1036,7 +1032,7 @@
     stealthOverlay.addEventListener('click', toggleStealth);
 
     // -------------------------------------------------------------
-    // (7) 闲置 4.5 秒自动收敛 UI 保证通透纯净
+    // (7) Auto-fade UI on Idle
     // -------------------------------------------------------------
     let idleTimer = null;
     function resetIdle() {
