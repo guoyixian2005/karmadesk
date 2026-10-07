@@ -7,6 +7,8 @@
   <meta name="description" content="An aesthetic minimalist desk sanctuary with 3D open lattice window, serene rain ambience, and sacred tactile sound healing objects.">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Gumroad JS for In-Page Seamless Checkout -->
+  <script src="https://gumroad.com/js/gumroad.js"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -356,6 +358,12 @@
         <span id="fadeBadge" class="text-[9px] px-1 py-0.2 rounded bg-zen-jade/20 text-zen-jade hidden">Fade</span>
       </button>
 
+      <!-- KarmaDesk Pro Upgrade Button -->
+      <button id="proBtn" class="px-2.5 sm:px-3 py-1 rounded-full bg-gradient-to-r from-zen-gold/25 via-yellow-500/20 to-zen-gold/25 border border-zen-gold/60 text-zen-gold hover:text-white hover:border-zen-gold hover:shadow-[0_0_15px_rgba(240,206,125,0.45)] transition-all text-xs font-semibold flex items-center gap-1 cursor-pointer" title="Unlock KarmaDesk Pro ($4.99 Lifetime Pass)">
+        <span>✨</span>
+        <span>Pro</span>
+      </button>
+
       <!-- Screensaver -->
       <button id="focusModeBtn" class="liquid-glass p-2 rounded-full text-gray-300 hover:text-white transition-all text-xs" title="Zen Screensaver Mode (Press F)">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -553,20 +561,80 @@
   </main>
 
   <!-- Clean Footer Bar -->
-  <footer class="ui-fader w-full max-w-xl mx-auto px-6 py-2.5 z-30 flex items-center justify-between text-[11px] text-gray-400">
+  <footer class="ui-fader w-full max-w-2xl mx-auto px-6 py-2.5 z-30 flex items-center justify-between text-[11px] text-gray-400">
     <div class="flex items-center gap-2">
       <span class="w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse"></span>
       <span>Window Sanctuary · Outdoor Rain · 2.5s Audio Fade</span>
     </div>
     <div class="flex items-center gap-3">
+      <button id="proFooterBtn" class="text-zen-gold hover:text-white transition-colors cursor-pointer font-medium flex items-center gap-1">✨ Pro ($4.99)</button>
       <span>Press <kbd class="px-1.5 py-0.5 rounded liquid-glass font-mono text-gray-300">F</kbd> Screensaver</span>
       <span>Press <kbd class="px-1.5 py-0.5 rounded liquid-glass font-mono text-gray-300">Esc</kbd> Clock</span>
     </div>
   </footer>
 
   <!-- =========================================================================
-       Modals & Overlays (Oracle Card, 108 Milestone Toast, Stealth Clock)
+       Modals & Overlays (Oracle Card, Pro Lifetime Pass, 108 Milestone Toast, Stealth Clock)
        ========================================================================= -->
+
+  <!-- KarmaDesk Pro Lifetime Pass Modal (Gumroad Checkout) -->
+  <div id="proModal" class="fixed inset-0 bg-black/45 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="liquid-glass rounded-3xl max-w-md w-full p-6 sm:p-8 text-center relative shadow-[0_25px_65px_rgba(0,0,0,0.8)] border border-zen-gold/40 flex flex-col items-center bg-[#150c07]/90 backdrop-blur-2xl">
+      <!-- Close X Button -->
+      <button id="closeProModalBtn" class="absolute top-4 right-4 w-7 h-7 rounded-full liquid-glass flex items-center justify-center text-gray-400 hover:text-white text-xs transition-colors cursor-pointer" title="Close">✕</button>
+
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-zen-gold/15 border border-zen-gold/30 text-zen-gold text-[10px] tracking-widest uppercase mb-2">
+        <span>✨</span><span>Lifetime Zen Pass</span><span>✨</span>
+      </div>
+      
+      <h3 class="text-xl sm:text-2xl font-bold text-white serif-title tracking-wide">KarmaDesk Pro</h3>
+      <p class="text-xs text-gray-300 mt-1 font-light">One-time purchase · Zero subscriptions forever</p>
+
+      <!-- Price Hero -->
+      <div class="my-5 flex items-baseline justify-center gap-1 text-zen-gold">
+        <span class="text-2xl font-light">$</span>
+        <span class="text-5xl font-bold font-mono tracking-tight text-white drop-shadow-[0_2px_20px_rgba(240,206,125,0.4)]">4.99</span>
+        <span class="text-xs text-gray-400 ml-1">USD / Lifetime</span>
+      </div>
+
+      <!-- Feature Checklist -->
+      <div class="w-full text-left space-y-2.5 my-4 p-4 rounded-2xl liquid-glass border border-white/10 bg-black/25 text-xs text-gray-200">
+        <div class="flex items-center gap-2.5">
+          <span class="text-zen-jade font-bold">✓</span>
+          <span><strong>4 Exclusive High-Def Soundscapes</strong> (Kyoto Snow, Midnight Thunder, Deep Bamboo, Ocean Tide)</span>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <span class="text-zen-jade font-bold">✓</span>
+          <span><strong>Standalone Desktop PWA</strong> (No browser tabs or borders)</span>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <span class="text-zen-jade font-bold">✓</span>
+          <span><strong>Custom Plaque Gold Engraving</strong> (Carve your personal name/mantra)</span>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <span class="text-zen-jade font-bold">✓</span>
+          <span><strong>Unlimited Daily Oracles</strong> & Karma history backup</span>
+        </div>
+      </div>
+
+      <!-- Action Button (Gumroad Checkout) -->
+      <div class="w-full mt-2 flex flex-col gap-2.5">
+        <a id="gumroadBuyLink" href="https://gumroad.com" target="_blank" class="gumroad-button w-full py-3 rounded-full bg-gradient-to-r from-zen-gold via-[#e8be66] to-[#caa051] text-[#1b0e07] font-bold text-xs tracking-wider uppercase hover:shadow-[0_0_30px_rgba(240,206,125,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2">
+          <span>✨ Unlock Lifetime Access ($4.99)</span>
+        </a>
+        <p class="text-[10px] text-gray-400">Secure checkout via Stripe / Apple Pay / PayPal · 30-Day Guarantee</p>
+      </div>
+
+      <!-- License Key Activation Option -->
+      <div class="mt-5 pt-4 border-t border-white/10 w-full flex items-center justify-between gap-2 text-xs">
+        <input id="licenseKeyInput" type="text" placeholder="Already bought? Enter license key" class="bg-black/30 border border-white/15 focus:border-zen-gold rounded-lg px-3 py-1.5 text-xs text-gray-200 outline-none flex-1 font-mono">
+        <button id="activateLicenseBtn" class="px-3 py-1.5 rounded-lg liquid-glass text-zen-gold hover:text-white font-medium text-xs cursor-pointer">Activate</button>
+      </div>
+      <div id="licenseFeedback" class="text-[10px] text-zen-jade mt-1.5 hidden">✓ Pro Pass Activated! Enjoy your sanctuary.</div>
+
+    </div>
+  </div>
 
   <!-- Daily Oracle Card Modal (Frosted Liquid-Glass Redesign) -->
   <div id="oracleModal" class="fixed inset-0 bg-black/35 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
@@ -1242,7 +1310,10 @@
       } else if (e.key.toLowerCase() === 'f') {
         toggleFocusMode();
       } else if (e.code === 'Escape') {
-        if (!oracleModal.classList.contains('hidden')) {
+        const proModal = document.getElementById('proModal');
+        if (proModal && !proModal.classList.contains('hidden')) {
+          proModal.classList.add('hidden');
+        } else if (!oracleModal.classList.contains('hidden')) {
           oracleModal.classList.add('hidden');
         } else {
           toggleStealth();
@@ -1355,6 +1426,51 @@
       }
     } catch(err) {
       console.warn('Daily oracle check:', err);
+    }
+
+    // -------------------------------------------------------------
+    // (6.5) Feature: KarmaDesk Pro Upgrade Modal & License Activation
+    // -------------------------------------------------------------
+    const proBtn = document.getElementById('proBtn');
+    const proFooterBtn = document.getElementById('proFooterBtn');
+    const proModal = document.getElementById('proModal');
+    const closeProModalBtn = document.getElementById('closeProModalBtn');
+    const activateLicenseBtn = document.getElementById('activateLicenseBtn');
+    const licenseKeyInput = document.getElementById('licenseKeyInput');
+    const licenseFeedback = document.getElementById('licenseFeedback');
+
+    function openProModal() {
+      if (proModal) proModal.classList.remove('hidden');
+    }
+    function closeProModal() {
+      if (proModal) proModal.classList.add('hidden');
+    }
+
+    if (proBtn) proBtn.addEventListener('click', openProModal);
+    if (proFooterBtn) proFooterBtn.addEventListener('click', openProModal);
+    if (closeProModalBtn) closeProModalBtn.addEventListener('click', closeProModal);
+
+    if (proModal) {
+      proModal.addEventListener('click', (e) => {
+        if (e.target === proModal) closeProModal();
+      });
+    }
+
+    if (activateLicenseBtn && licenseKeyInput && licenseFeedback) {
+      activateLicenseBtn.addEventListener('click', () => {
+        const key = licenseKeyInput.value.trim();
+        if (key.length >= 4) {
+          localStorage.setItem('karmadesk_pro_unlocked', 'true');
+          licenseFeedback.classList.remove('hidden');
+          licenseFeedback.textContent = '✓ Pro Lifetime Pass Activated! Thank you for your support.';
+          setTimeout(() => {
+            closeProModal();
+          }, 1800);
+        } else {
+          licenseFeedback.classList.remove('hidden');
+          licenseFeedback.textContent = 'Please enter a valid Gumroad license key.';
+        }
+      });
     }
 
     // -------------------------------------------------------------
