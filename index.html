@@ -130,6 +130,17 @@
       transform: translateY(2px) scale(0.96) !important;
     }
 
+    /* 4-7-8 Breathing Pulse Animation for Ambient Screensaver */
+    @keyframes zenBreath {
+      0%, 100% { transform: scale(0.92); opacity: 0.18; }
+      21% { transform: scale(1.35); opacity: 0.55; } /* Inhale (4s / 19s) */
+      58% { transform: scale(1.35); opacity: 0.55; } /* Hold (7s / 19s) */
+      100% { transform: scale(0.92); opacity: 0.18; } /* Exhale (8s / 19s) */
+    }
+    .animate-zen-breath {
+      animation: zenBreath 19s ease-in-out infinite;
+    }
+
     /* UI Idle Auto-fade */
     .ui-fader {
       transition: opacity 0.8s ease, transform 0.8s ease;
@@ -349,8 +360,8 @@
        ========================================================================= -->
   <main class="relative flex-1 flex flex-col justify-end items-center px-4 z-25">
     
-    <!-- Floating Affirmation Particle Layer -->
-    <div id="particleZone" class="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden"></div>
+    <!-- Floating Affirmation Particle Layer (Global Z-Index for Visibility) -->
+    <div id="particleZone" class="fixed inset-0 pointer-events-none overflow-hidden z-45"></div>
 
     <!-- Eave Wind Chime (Firmly mounted under solid beam hook) -->
     <div class="absolute top-12 md:top-14 right-14 md:right-32 z-30 flex flex-col items-center">
@@ -540,26 +551,35 @@
        Modals & Overlays (Oracle Card, 108 Milestone Toast, Stealth Clock)
        ========================================================================= -->
 
-  <!-- Daily Oracle Card Modal -->
-  <div id="oracleModal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
-    <div class="antique-plaque rounded-2xl max-w-sm w-full p-6 text-center relative shadow-2xl border-2 border-[#844c21] flex flex-col items-center">
-      <div class="text-zen-gold/60 text-[10px] tracking-widest uppercase mb-1">❖ Daily Universe Message ❖</div>
-      <h3 class="text-base font-bold text-zen-gold serif-title tracking-wider mt-0.5">Affirmation of the Day</h3>
+  <!-- Daily Oracle Card Modal (Frosted Liquid-Glass Redesign) -->
+  <div id="oracleModal" class="fixed inset-0 bg-black/35 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="liquid-glass rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center relative shadow-[0_25px_65px_rgba(0,0,0,0.75)] border border-zen-gold/35 flex flex-col items-center bg-[#150c07]/85 backdrop-blur-2xl">
+      <!-- Close X Button -->
+      <button id="closeOracleXBtn" class="absolute top-4 right-4 w-7 h-7 rounded-full liquid-glass flex items-center justify-center text-gray-400 hover:text-white text-xs transition-colors cursor-pointer" title="Close">✕</button>
+
+      <div class="text-zen-gold/70 text-[10px] tracking-[0.28em] uppercase mb-1.5 flex items-center gap-1.5">
+        <span>❖</span><span>Daily Universe Affirmation</span><span>❖</span>
+      </div>
+      <h3 class="text-xl sm:text-2xl font-bold text-zen-gold serif-title tracking-wider">Your Daily Oracle</h3>
+      <p class="text-xs text-gray-300 mt-1 font-light tracking-wide">Draw clarity & alignment for your sanctuary</p>
       
-      <div class="my-5 p-4 rounded-xl liquid-glass border border-zen-gold/25 w-full">
-        <p id="oracleQuote" class="text-sm text-gray-100 font-serif leading-relaxed italic">
+      <div class="my-6 p-6 rounded-2xl liquid-glass border border-zen-gold/30 w-full relative overflow-hidden bg-black/25 shadow-inner">
+        <div class="absolute -right-3 -bottom-5 text-7xl text-zen-gold/10 font-serif select-none pointer-events-none">”</div>
+        <p id="oracleQuote" class="text-base sm:text-lg text-gray-100 font-serif leading-relaxed italic tracking-wide">
           "What is meant for you will never pass you by."
         </p>
-        <span id="oracleTheme" class="inline-block mt-3 text-[10px] px-2.5 py-0.5 rounded-full bg-zen-gold/15 text-zen-gold border border-zen-gold/30">
-          Abundance & Destiny
-        </span>
+        <div class="mt-4 flex items-center justify-center">
+          <span id="oracleTheme" class="inline-flex items-center gap-1.5 text-xs px-3.5 py-1 rounded-full bg-zen-gold/15 text-zen-gold border border-zen-gold/35 font-medium tracking-wider shadow-sm">
+            Abundance & Destiny
+          </span>
+        </div>
       </div>
 
       <div class="flex items-center gap-3 w-full justify-center">
-        <button id="setOracleToPlaqueBtn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-zen-gold to-yellow-600 text-black font-semibold text-xs tracking-wide hover:brightness-110 shadow-lg transition-all cursor-pointer">
-          ✨ Set to Plaque
+        <button id="setOracleToPlaqueBtn" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-zen-gold via-[#e8be66] to-[#caa051] text-[#1b0e07] font-semibold text-xs tracking-wider uppercase hover:shadow-[0_0_25px_rgba(240,206,125,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-lg flex items-center gap-1.5">
+          <span>✨</span><span>Set to Plaque</span>
         </button>
-        <button id="closeOracleBtn" class="px-4 py-2 rounded-xl liquid-glass text-gray-300 text-xs hover:text-white transition-all cursor-pointer">
+        <button id="closeOracleBtn" class="px-5 py-2.5 rounded-full liquid-glass text-gray-300 text-xs hover:text-white hover:bg-white/15 transition-all cursor-pointer">
           Close
         </button>
       </div>
@@ -573,13 +593,61 @@
     <span class="text-sm">✨</span>
   </div>
 
-  <!-- Stealth Focus Clock Overlay (Esc) -->
-  <div id="stealthOverlay" class="fixed inset-0 bg-[#070b0a] z-50 flex flex-col items-center justify-center hidden cursor-pointer select-none" title="Click anywhere or press Esc to return">
-    <div class="text-center">
-      <div id="clockTime" class="mono-num text-7xl md:text-8xl font-light text-gray-400 tracking-tight">12:00:00</div>
-      <div id="clockDate" class="text-sm uppercase tracking-widest text-gray-400 mt-4">Wednesday, October 7 · Sanctuary Focus</div>
-      <p class="text-xs text-gray-400/50 mt-12">Click screen or press [Esc] to return</p>
+  <!-- Ambient Screensaver / Focus Clock Mode (Esc or Clock Btn) -->
+  <div id="stealthOverlay" class="fixed inset-0 bg-black/35 backdrop-blur-[2px] z-40 flex flex-col items-center justify-between py-10 md:py-14 px-6 hidden select-none transition-all duration-700 cursor-pointer" title="Press Esc or click anywhere to exit">
+    
+    <!-- Top Status Pill -->
+    <div class="flex items-center gap-2 px-4 py-1.5 rounded-full liquid-glass text-xs text-gray-300 border border-white/10 shadow-lg">
+      <span class="w-2 h-2 rounded-full bg-zen-jade animate-pulse"></span>
+      <span>Sanctuary Screensaver · Rain Ambience Active</span>
+      <span class="text-gray-500">|</span>
+      <span class="text-zen-gold/90 font-mono text-[11px]">Click or Press [Esc] to Exit</span>
     </div>
+
+    <!-- Center: Clock & 4-7-8 Breathing Halo & Rotating Zen Quotes -->
+    <div class="flex flex-col items-center justify-center relative w-full max-w-xl text-center my-auto">
+      <!-- 4-7-8 Breathing Halo Glow -->
+      <div class="absolute w-72 h-72 md:w-96 md:h-96 rounded-full bg-zen-gold/15 blur-3xl animate-zen-breath pointer-events-none"></div>
+
+      <!-- Time Display -->
+      <div id="clockTime" class="mono-num text-7xl sm:text-8xl md:text-9xl font-light text-white drop-shadow-[0_4px_35px_rgba(240,206,125,0.35)] tracking-tight relative z-10 transition-transform duration-300">
+        12:00:00
+      </div>
+
+      <!-- Date Display -->
+      <div id="clockDate" class="text-xs sm:text-sm md:text-base font-medium uppercase tracking-[0.25em] text-zen-gold/90 mt-4 serif-title relative z-10">
+        Wednesday, October 7 · Desk Sanctuary
+      </div>
+
+      <!-- 4-7-8 Breathing Guide Pill -->
+      <div id="breathGuideBadge" class="inline-flex items-center gap-2 mt-5 px-4 py-1 rounded-full liquid-glass border border-zen-gold/30 text-zen-gold/85 text-[11px] tracking-widest uppercase font-mono relative z-10 shadow-md">
+        <span class="w-1.5 h-1.5 rounded-full bg-zen-gold animate-ping"></span>
+        <span id="breathPhaseText">4-7-8 Breathing · Inhale (4s)</span>
+      </div>
+
+      <!-- Rotating Zen Affirmation Quotes Box -->
+      <div class="mt-8 px-6 py-4 rounded-2xl liquid-glass border border-white/10 max-w-md w-full relative z-10 shadow-xl bg-black/25">
+        <p id="screensaverQuote" class="text-sm md:text-base text-gray-200 italic serif-title leading-relaxed transition-opacity duration-700">
+          "Stillness is where clarity is born."
+        </p>
+      </div>
+    </div>
+
+    <!-- Bottom Tactical Reminder -->
+    <div class="flex flex-col items-center gap-1.5 text-center text-gray-400 text-xs relative z-10">
+      <p class="flex items-center gap-2">
+        <span class="text-gray-300">Tap while resting:</span>
+        <span class="inline-flex gap-1 font-mono text-[10px] text-white">
+          <kbd class="px-1.5 py-0.5 rounded liquid-glass">1</kbd>
+          <kbd class="px-1.5 py-0.5 rounded liquid-glass">2</kbd>
+          <kbd class="px-1.5 py-0.5 rounded liquid-glass">3</kbd>
+          <kbd class="px-1.5 py-0.5 rounded liquid-glass">4</kbd>
+          <kbd class="px-2 py-0.5 rounded liquid-glass">Space</kbd>
+        </span>
+        <span class="text-gray-400">to resonate</span>
+      </p>
+    </div>
+
   </div>
 
   <!-- =========================================================================
@@ -1038,6 +1106,16 @@
           water.classList.add('opacity-20');
         }, 600);
       }
+
+      // Ambient Screensaver Mode Clock Shimmer on Resonance
+      const clockTimeEl = document.getElementById('clockTime');
+      const stealthOverlayEl = document.getElementById('stealthOverlay');
+      if (clockTimeEl && stealthOverlayEl && !stealthOverlayEl.classList.contains('hidden')) {
+        clockTimeEl.classList.add('scale-105', 'text-zen-gold');
+        setTimeout(() => {
+          clockTimeEl.classList.remove('scale-105', 'text-zen-gold');
+        }, 320);
+      }
     }
 
     // Attach Click Events to 4 Sacred Objects
@@ -1080,7 +1158,11 @@
       } else if (e.key.toLowerCase() === 'f') {
         toggleFocusMode();
       } else if (e.code === 'Escape') {
-        toggleStealth();
+        if (!oracleModal.classList.contains('hidden')) {
+          oracleModal.classList.add('hidden');
+        } else {
+          toggleStealth();
+        }
       }
     });
 
@@ -1139,37 +1221,57 @@
     const oracleBtn = document.getElementById('oracleBtn');
     const oracleModal = document.getElementById('oracleModal');
     const closeOracleBtn = document.getElementById('closeOracleBtn');
+    const closeOracleXBtn = document.getElementById('closeOracleXBtn');
     const setOracleToPlaqueBtn = document.getElementById('setOracleToPlaqueBtn');
     const oracleQuote = document.getElementById('oracleQuote');
     const oracleTheme = document.getElementById('oracleTheme');
 
     let currentOracle = null;
 
-    oracleBtn.addEventListener('click', () => {
-      // Pick random or daily card
+    function openOracle(playChimeSound = true) {
       currentOracle = ORACLE_CARDS[Math.floor(Math.random() * ORACLE_CARDS.length)];
       oracleQuote.textContent = `"${currentOracle.quote}"`;
       oracleTheme.textContent = currentOracle.theme;
       oracleModal.classList.remove('hidden');
-      playWindChime(); // delicate chime welcome
-    });
+      if (playChimeSound) {
+        try { playWindChime(); } catch(e) {}
+      }
+    }
 
-    closeOracleBtn.addEventListener('click', () => {
+    function closeOracle() {
       oracleModal.classList.add('hidden');
-    });
+    }
+
+    oracleBtn.addEventListener('click', () => openOracle(true));
+    closeOracleBtn.addEventListener('click', closeOracle);
+    if (closeOracleXBtn) closeOracleXBtn.addEventListener('click', closeOracle);
 
     setOracleToPlaqueBtn.addEventListener('click', () => {
       if (currentOracle) {
         customWishInput.value = currentOracle.theme.toUpperCase();
         syncPlaque();
-        oracleModal.classList.add('hidden');
+        closeOracle();
         btnBowl.click(); // resonate immediately
       }
     });
 
     oracleModal.addEventListener('click', (e) => {
-      if (e.target === oracleModal) oracleModal.classList.add('hidden');
+      if (e.target === oracleModal) closeOracle();
     });
+
+    // Daily Auto-Popup on first visit of each day
+    try {
+      const todayDateKey = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+      const lastOracleDate = localStorage.getItem('karmadesk_last_oracle_date');
+      if (lastOracleDate !== todayDateKey) {
+        localStorage.setItem('karmadesk_last_oracle_date', todayDateKey);
+        setTimeout(() => {
+          openOracle(false); // soft presentation without jarring autoplay sound
+        }, 750);
+      }
+    } catch(err) {
+      console.warn('Daily oracle check:', err);
+    }
 
     // -------------------------------------------------------------
     // (7) Zen Screensaver Mode (F Key or Double Click)
@@ -1185,14 +1287,50 @@
     });
 
     // -------------------------------------------------------------
-    // (8) Stealth Focus Clock (Esc)
+    // (8) Ambient Screensaver Focus Clock Mode (Esc or Clock Btn)
     // -------------------------------------------------------------
     const stealthOverlay = document.getElementById('stealthOverlay');
     let clockTimer = null;
+    let quoteRotateTimer = null;
+    let currentScreensaverQuoteIdx = 0;
+
+    const ZEN_CLOCK_QUOTES = [
+      "Stillness is where clarity is born.",
+      "Let your thoughts drift away like gentle mountain rain.",
+      "Be present in this breath, in this exact moment.",
+      "Simplicity is the ultimate sanctuary.",
+      "Quiet the restless mind, and the soul will speak.",
+      "Peace comes from within. Do not seek it without.",
+      "In the depth of winter, I learned that within me lies an invincible summer.",
+      "Flow like water through whatever path opens before you."
+    ];
 
     function updateClock() {
       const now = new Date();
-      document.getElementById('clockTime').textContent = now.toLocaleTimeString([], { hour12: false });
+      const timeStr = now.toLocaleTimeString([], { hour12: false });
+      const clockTimeEl = document.getElementById('clockTime');
+      if (clockTimeEl) clockTimeEl.textContent = timeStr;
+
+      const dateStr = now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      });
+      const clockDateEl = document.getElementById('clockDate');
+      if (clockDateEl) clockDateEl.textContent = `${dateStr} · Desk Sanctuary`;
+
+      // 4-7-8 Breathing Guide calculation (19s full cycle)
+      const cycleSec = (Date.now() / 1000) % 19;
+      const breathPhaseEl = document.getElementById('breathPhaseText');
+      if (breathPhaseEl) {
+        if (cycleSec < 4) {
+          breathPhaseEl.textContent = '4-7-8 Breathing · Inhale (4s)';
+        } else if (cycleSec < 11) {
+          breathPhaseEl.textContent = '4-7-8 Breathing · Hold (7s)';
+        } else {
+          breathPhaseEl.textContent = '4-7-8 Breathing · Exhale (8s)';
+        }
+      }
     }
 
     function toggleStealth() {
@@ -1200,15 +1338,34 @@
       if (isHidden) {
         updateClock();
         clockTimer = setInterval(updateClock, 1000);
+        
+        // Start rotating quotes every 11 seconds
+        quoteRotateTimer = setInterval(() => {
+          const quoteEl = document.getElementById('screensaverQuote');
+          if (!quoteEl) return;
+          quoteEl.style.opacity = '0';
+          setTimeout(() => {
+            currentScreensaverQuoteIdx = (currentScreensaverQuoteIdx + 1) % ZEN_CLOCK_QUOTES.length;
+            quoteEl.textContent = `"${ZEN_CLOCK_QUOTES[currentScreensaverQuoteIdx]}"`;
+            quoteEl.style.opacity = '1';
+          }, 600);
+        }, 11000);
+
         stealthOverlay.classList.remove('hidden');
       } else {
         clearInterval(clockTimer);
+        clearInterval(quoteRotateTimer);
+        clockTimer = null;
+        quoteRotateTimer = null;
         stealthOverlay.classList.add('hidden');
       }
     }
 
     document.getElementById('stealthBtn').addEventListener('click', toggleStealth);
-    stealthOverlay.addEventListener('click', toggleStealth);
+    stealthOverlay.addEventListener('click', (e) => {
+      // Clicking on screensaver background returns to main desk
+      toggleStealth();
+    });
 
     // -------------------------------------------------------------
     // (9) Auto-fade UI on Idle
