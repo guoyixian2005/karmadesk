@@ -189,12 +189,12 @@
       <!-- 3D Inner Reveal Bevel & Ambient Occlusion -->
       <div class="absolute inset-0 shadow-[inset_0_24px_50px_rgba(0,0,0,0.8),inset_24px_0_40px_rgba(0,0,0,0.7),inset_-24px_0_40px_rgba(0,0,0,0.7)] z-20 pointer-events-none"></div>
 
-      <!-- Natural Atmospheric Depth Parallax World -->
-      <div id="depthWorld" class="absolute inset-0 w-full h-full overflow-hidden transition-transform duration-200 ease-out">
+      <!-- Natural Atmospheric Depth Parallax World (GPU Accelerated) -->
+      <div id="depthWorld" class="absolute inset-0 w-full h-full overflow-hidden">
         
         <!-- Depth Layer 1: Distant Mountains & Atmospheric Sky -->
-        <div id="layerFarMountains" class="absolute -inset-4 bg-cover bg-center filter brightness-[0.72] contrast-[1.05] transition-transform duration-300" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2600&auto=format&fit=crop');">
-          <div class="absolute inset-0 bg-gradient-to-b from-[#1c2e2a]/60 via-[#142320]/40 to-[#0e1816]/80"></div>
+        <div id="layerFarMountains" class="absolute -inset-6 bg-cover bg-center will-change-transform" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2600&auto=format&fit=crop'); transform: translate3d(0,0,0);">
+          <div class="absolute inset-0 bg-gradient-to-b from-[#1c2e2a]/75 via-[#142320]/50 to-[#0e1816]/90"></div>
         </div>
 
         <!-- Depth Layer 2: Dynamic Drifting Mountain Mist -->
@@ -203,7 +203,7 @@
         </div>
 
         <!-- Depth Layer 3: Midground Forest Ridges & Serene Deep Waters (Zero Artificial Stripes) -->
-        <div id="layerMidLake" class="absolute bottom-0 left-0 right-0 h-2/3 transition-transform duration-200 z-3 pointer-events-none">
+        <div id="layerMidLake" class="absolute bottom-0 left-0 right-0 h-2/3 z-3 pointer-events-none will-change-transform" style="transform: translate3d(0,0,0);">
           <div class="w-full h-full bg-gradient-to-t from-[#10241f]/95 via-[#16332c]/50 to-transparent"></div>
         </div>
 
@@ -213,7 +213,7 @@
         </div>
 
         <!-- Depth Layer 5: Near-window Wet Bamboo Leaves (Foreground Depth Anchor) -->
-        <div id="layerNearBamboo" class="absolute -bottom-4 left-6 w-72 h-80 z-6 transition-transform duration-150 pointer-events-none drop-shadow-[0_15px_20px_rgba(0,0,0,0.8)] opacity-90 hidden sm:block">
+        <div id="layerNearBamboo" class="absolute -bottom-4 left-6 w-72 h-80 z-6 pointer-events-none drop-shadow-[0_15px_20px_rgba(0,0,0,0.8)] opacity-90 hidden sm:block will-change-transform" style="transform: translate3d(0,0,0);">
           <svg class="w-full h-full" viewBox="0 0 280 320" fill="none">
             <path d="M40,320 Q55,180 75,60" stroke="#0a1613" stroke-width="8" stroke-linecap="round"/>
             <path d="M70,320 Q95,190 120,80" stroke="#0e1d19" stroke-width="7" stroke-linecap="round"/>
@@ -1062,28 +1062,44 @@
     }
 
     // -------------------------------------------------------------
-    // (2) Mouse Micro-Parallax Spatial Perspective
+    // (2) Butter-Smooth GPU Micro-Parallax (Decoupled RAF + Damping)
     // -------------------------------------------------------------
     const layerFar = document.getElementById('layerFarMountains');
     const layerMid = document.getElementById('layerMidLake');
     const layerBamboo = document.getElementById('layerNearBamboo');
 
+    let targetDeltaX = 0;
+    let targetDeltaY = 0;
+    let currentDeltaX = 0;
+    let currentDeltaY = 0;
+
+    // Zero-overhead passive listener: just capture coordinate targets
     window.addEventListener('mousemove', (e) => {
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
-      const deltaX = (e.clientX - centerX) / centerX;
-      const deltaY = (e.clientY - centerY) / centerY;
+      targetDeltaX = (e.clientX - centerX) / centerX;
+      targetDeltaY = (e.clientY - centerY) / centerY;
+    }, { passive: true });
+
+    // Butter-smooth 60/120fps hardware-composited interpolation loop
+    function updateParallax() {
+      // 0.08 spring damping for natural organic fluidity without lag
+      currentDeltaX += (targetDeltaX - currentDeltaX) * 0.08;
+      currentDeltaY += (targetDeltaY - currentDeltaY) * 0.08;
 
       if (layerFar) {
-        layerFar.style.transform = `translate(${deltaX * -4}px, ${deltaY * -3}px) scale(1.04)`;
+        layerFar.style.transform = `translate3d(${(currentDeltaX * -5).toFixed(2)}px, ${(currentDeltaY * -3.5).toFixed(2)}px, 0) scale(1.04)`;
       }
       if (layerMid) {
-        layerMid.style.transform = `translate(${deltaX * -9}px, ${deltaY * -5}px)`;
+        layerMid.style.transform = `translate3d(${(currentDeltaX * -10).toFixed(2)}px, ${(currentDeltaY * -6).toFixed(2)}px, 0)`;
       }
       if (layerBamboo) {
-        layerBamboo.style.transform = `translate(${deltaX * -18}px, ${deltaY * -10}px)`;
+        layerBamboo.style.transform = `translate3d(${(currentDeltaX * -18).toFixed(2)}px, ${(currentDeltaY * -10).toFixed(2)}px, 0)`;
       }
-    });
+
+      requestAnimationFrame(updateParallax);
+    }
+    requestAnimationFrame(updateParallax);
 
     // -------------------------------------------------------------
     // (3) Natural Window Rain Stream (Zero Mid-Air Flat Splashes)
