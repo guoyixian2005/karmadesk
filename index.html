@@ -577,61 +577,113 @@
        Modals & Overlays (Oracle Card, Pro Lifetime Pass, 108 Milestone Toast, Stealth Clock)
        ========================================================================= -->
 
-  <!-- KarmaDesk Pro Lifetime Pass Modal (Gumroad Checkout) -->
+  <!-- KarmaDesk Pro Lifetime Pass Modal (Gumroad Checkout & Member Hub) -->
   <div id="proModal" class="fixed inset-0 bg-black/45 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
     <div class="liquid-glass rounded-3xl max-w-md w-full p-6 sm:p-8 text-center relative shadow-[0_25px_65px_rgba(0,0,0,0.8)] border border-zen-gold/40 flex flex-col items-center bg-[#150c07]/90 backdrop-blur-2xl">
       <!-- Close X Button -->
       <button id="closeProModalBtn" class="absolute top-4 right-4 w-7 h-7 rounded-full liquid-glass flex items-center justify-center text-gray-400 hover:text-white text-xs transition-colors cursor-pointer" title="Close">✕</button>
 
-      <!-- Badge -->
-      <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-zen-gold/15 border border-zen-gold/30 text-zen-gold text-[10px] tracking-widest uppercase mb-2">
-        <span>✨</span><span>Lifetime Zen Pass</span><span>✨</span>
-      </div>
-      
-      <h3 class="text-xl sm:text-2xl font-bold text-white serif-title tracking-wide">KarmaDesk Pro</h3>
-      <p class="text-xs text-gray-300 mt-1 font-light">One-time purchase · Zero subscriptions forever</p>
-
-      <!-- Price Hero -->
-      <div class="my-5 flex items-baseline justify-center gap-1 text-zen-gold">
-        <span class="text-2xl font-light">$</span>
-        <span class="text-5xl font-bold font-mono tracking-tight text-white drop-shadow-[0_2px_20px_rgba(240,206,125,0.4)]">4.99</span>
-        <span class="text-xs text-gray-400 ml-1">USD / Lifetime</span>
-      </div>
-
-      <!-- Feature Checklist -->
-      <div class="w-full text-left space-y-2.5 my-4 p-4 rounded-2xl liquid-glass border border-white/10 bg-black/25 text-xs text-gray-200">
-        <div class="flex items-center gap-2.5">
-          <span class="text-zen-jade font-bold">✓</span>
-          <span><strong>4 Exclusive High-Def Soundscapes</strong> (Kyoto Snow, Midnight Thunder, Deep Bamboo, Ocean Tide)</span>
+      <!-- VIEW 1: Pro Buy View (Non-Pro Users) -->
+      <div id="proBuyView" class="w-full flex flex-col items-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-zen-gold/15 border border-zen-gold/30 text-zen-gold text-[10px] tracking-widest uppercase mb-2">
+          <span>✨</span><span>Lifetime Zen Pass</span><span>✨</span>
         </div>
-        <div class="flex items-center gap-2.5">
-          <span class="text-zen-jade font-bold">✓</span>
-          <span><strong>Standalone Desktop PWA</strong> (No browser tabs or borders)</span>
+        
+        <h3 class="text-xl sm:text-2xl font-bold text-white serif-title tracking-wide">KarmaDesk Pro</h3>
+        <p class="text-xs text-gray-300 mt-1 font-light">One-time purchase · Zero subscriptions forever</p>
+
+        <!-- Price Hero -->
+        <div class="my-5 flex items-baseline justify-center gap-1 text-zen-gold">
+          <span class="text-2xl font-light">$</span>
+          <span class="text-5xl font-bold font-mono tracking-tight text-white drop-shadow-[0_2px_20px_rgba(240,206,125,0.4)]">4.99</span>
+          <span class="text-xs text-gray-400 ml-1">USD / Lifetime</span>
         </div>
-        <div class="flex items-center gap-2.5">
-          <span class="text-zen-jade font-bold">✓</span>
-          <span><strong>Custom Plaque Gold Engraving</strong> (Carve your personal name/mantra)</span>
+
+        <!-- Feature Checklist -->
+        <div class="w-full text-left space-y-2.5 my-4 p-4 rounded-2xl liquid-glass border border-white/10 bg-black/25 text-xs text-gray-200">
+          <div class="flex items-center gap-2.5">
+            <span class="text-zen-jade font-bold">✓</span>
+            <span><strong>4 Exclusive High-Def Soundscapes</strong> (Kyoto Snow, Midnight Thunder, Deep Bamboo, Ocean Tide)</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-zen-jade font-bold">✓</span>
+            <span><strong>Standalone Desktop PWA</strong> (No browser tabs or borders)</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-zen-jade font-bold">✓</span>
+            <span><strong>Custom Plaque Gold Engraving</strong> (Carve your personal name/mantra)</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <span class="text-zen-jade font-bold">✓</span>
+            <span><strong>Unlimited Daily Oracles</strong> & Karma history backup</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2.5">
-          <span class="text-zen-jade font-bold">✓</span>
-          <span><strong>Unlimited Daily Oracles</strong> & Karma history backup</span>
+
+        <!-- Action Button (Gumroad Checkout) -->
+        <div class="w-full mt-2 flex flex-col gap-2.5">
+          <a id="gumroadBuyLink" href="https://1943802037103.gumroad.com/l/ijycvm" target="_blank" class="gumroad-button w-full py-3 rounded-full bg-gradient-to-r from-zen-gold via-[#e8be66] to-[#caa051] text-[#1b0e07] font-bold text-xs tracking-wider uppercase hover:shadow-[0_0_30px_rgba(240,206,125,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2">
+            <span>✨ Unlock Lifetime Access ($4.99)</span>
+          </a>
+          <p class="text-[10px] text-gray-400">Secure checkout via Stripe / Apple Pay / PayPal · 30-Day Guarantee</p>
         </div>
+
+        <!-- One-Click Instant Restore Button for Gumroad Buyers -->
+        <button id="restorePurchaseBtn" class="text-xs text-zen-gold/90 hover:text-white underline cursor-pointer mt-3 transition-colors">
+          Already purchased on Gumroad? Click here to activate instantly
+        </button>
+
+        <!-- License Key Activation Option -->
+        <div class="mt-4 pt-4 border-t border-white/10 w-full flex items-center justify-between gap-2 text-xs">
+          <input id="licenseKeyInput" type="text" placeholder="Or enter license key" class="bg-black/30 border border-white/15 focus:border-zen-gold rounded-lg px-3 py-1.5 text-xs text-gray-200 outline-none flex-1 font-mono">
+          <button id="activateLicenseBtn" class="px-3 py-1.5 rounded-lg liquid-glass text-zen-gold hover:text-white font-medium text-xs cursor-pointer">Activate</button>
+        </div>
+        <div id="licenseFeedback" class="text-[10px] text-zen-jade mt-1.5 hidden">✓ Pro Pass Activated! Enjoy your sanctuary.</div>
       </div>
 
-      <!-- Action Button (Gumroad Checkout) -->
-      <div class="w-full mt-2 flex flex-col gap-2.5">
-        <a id="gumroadBuyLink" href="https://1943802037103.gumroad.com/l/ijycvm" target="_blank" class="gumroad-button w-full py-3 rounded-full bg-gradient-to-r from-zen-gold via-[#e8be66] to-[#caa051] text-[#1b0e07] font-bold text-xs tracking-wider uppercase hover:shadow-[0_0_30px_rgba(240,206,125,0.5)] hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer shadow-lg flex items-center justify-center gap-2">
-          <span>✨ Unlock Lifetime Access ($4.99)</span>
-        </a>
-        <p class="text-[10px] text-gray-400">Secure checkout via Stripe / Apple Pay / PayPal · 30-Day Guarantee</p>
-      </div>
+      <!-- VIEW 2: Pro Active Member Hub (Unlocked Users) -->
+      <div id="proActiveView" class="w-full flex flex-col items-center hidden">
+        <div class="w-14 h-14 rounded-full liquid-glass border border-zen-gold/70 flex items-center justify-center text-3xl text-zen-gold shadow-[0_0_30px_rgba(240,206,125,0.5)] mb-3">
+          👑
+        </div>
+        <h3 class="text-xl sm:text-2xl font-bold text-zen-gold serif-title tracking-wide">KarmaDesk Pro Active</h3>
+        <p class="text-xs text-gray-300 mt-1 font-light">Lifetime Zen Sanctuary Unlocked · All Features Active</p>
 
-      <!-- License Key Activation Option -->
-      <div class="mt-5 pt-4 border-t border-white/10 w-full flex items-center justify-between gap-2 text-xs">
-        <input id="licenseKeyInput" type="text" placeholder="Already bought? Enter license key" class="bg-black/30 border border-white/15 focus:border-zen-gold rounded-lg px-3 py-1.5 text-xs text-gray-200 outline-none flex-1 font-mono">
-        <button id="activateLicenseBtn" class="px-3 py-1.5 rounded-lg liquid-glass text-zen-gold hover:text-white font-medium text-xs cursor-pointer">Activate</button>
+        <!-- Soundscape Selector Box -->
+        <div class="w-full my-5 p-4 rounded-2xl liquid-glass border border-zen-gold/30 bg-black/35 text-left">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-zen-gold font-bold">Soundscape Library</span>
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-zen-jade/20 text-zen-jade">4 HD Pro Audio Active</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs" id="soundscapeGrid">
+            <button class="soundscape-select-btn p-2 rounded-xl border border-zen-gold bg-zen-gold/15 text-white flex items-center justify-between transition-all cursor-pointer" data-sound="rain">
+              <span class="flex items-center gap-2"><span>🌧️</span><span>Spring Rain</span></span>
+              <span class="text-[10px] text-zen-gold">✓ Active</span>
+            </button>
+            <button class="soundscape-select-btn p-2 rounded-xl border border-white/10 hover:border-zen-gold text-gray-300 hover:text-white flex items-center justify-between transition-all cursor-pointer" data-sound="snow">
+              <span class="flex items-center gap-2"><span>❄️</span><span>Kyoto Snow</span></span>
+              <span class="text-[9px] text-zen-gold/70">PRO</span>
+            </button>
+            <button class="soundscape-select-btn p-2 rounded-xl border border-white/10 hover:border-zen-gold text-gray-300 hover:text-white flex items-center justify-between transition-all cursor-pointer" data-sound="thunder">
+              <span class="flex items-center gap-2"><span>⛈️</span><span>Night Thunder</span></span>
+              <span class="text-[9px] text-zen-gold/70">PRO</span>
+            </button>
+            <button class="soundscape-select-btn p-2 rounded-xl border border-white/10 hover:border-zen-gold text-gray-300 hover:text-white flex items-center justify-between transition-all cursor-pointer" data-sound="bamboo">
+              <span class="flex items-center gap-2"><span>🎋</span><span>Bamboo Brook</span></span>
+              <span class="text-[9px] text-zen-gold/70">PRO</span>
+            </button>
+            <button class="soundscape-select-btn sm:col-span-2 p-2 rounded-xl border border-white/10 hover:border-zen-gold text-gray-300 hover:text-white flex items-center justify-between transition-all cursor-pointer" data-sound="ocean">
+              <span class="flex items-center gap-2"><span>🌊</span><span>Deep Ocean Tide</span></span>
+              <span class="text-[9px] text-zen-gold/70">PRO</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="closeProActiveBtn" class="w-full py-2.5 rounded-full liquid-glass text-gray-200 hover:text-white text-xs font-semibold cursor-pointer">
+          Done
+        </button>
       </div>
-      <div id="licenseFeedback" class="text-[10px] text-zen-jade mt-1.5 hidden">✓ Pro Pass Activated! Enjoy your sanctuary.</div>
 
     </div>
   </div>
@@ -1001,8 +1053,9 @@
       });
     }
 
-    // Natural Rain Ambient 2.5s Smooth Fade
+    // Natural Rain & HD Pro Ambient Soundscapes (2.5s Smooth Fade)
     const fadeBadge = document.getElementById('fadeBadge');
+    let currentSoundscape = localStorage.getItem('karmadesk_active_soundscape') || 'rain';
 
     function startRainWithFadeIn() {
       const ctx = getAudioContext();
@@ -1012,13 +1065,48 @@
       const bufferSize = ctx.sampleRate * 4;
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
-      let b0 = 0, b1 = 0, b2 = 0;
-      for (let i = 0; i < bufferSize; i++) {
-        const white = Math.random() * 2 - 1;
-        b0 = 0.99765 * b0 + white * 0.085;
-        b1 = 0.96300 * b1 + white * 0.25;
-        b2 = 0.57000 * b2 + white * 0.9;
-        data[i] = (b0 + b1 + b2) * 0.038;
+
+      if (currentSoundscape === 'snow') {
+        let last = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          last = (last + (0.02 * white)) / 1.02;
+          data[i] = last * 0.45;
+        }
+      } else if (currentSoundscape === 'thunder') {
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.998 * b0 + white * 0.12;
+          b1 = 0.96 * b1 + white * 0.28;
+          b2 = 0.57 * b2 + white * 0.9;
+          const rumble = Math.sin((i / ctx.sampleRate) * Math.PI * 45) * 0.08;
+          data[i] = (b0 + b1 + b2) * 0.042 + rumble;
+        }
+      } else if (currentSoundscape === 'bamboo') {
+        let b0 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.95 * b0 + white * 0.05;
+          const trickle = Math.sin((i / ctx.sampleRate) * Math.PI * 180) * 0.03;
+          data[i] = (b0 * 0.4) + trickle;
+        }
+      } else if (currentSoundscape === 'ocean') {
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          const t = i / ctx.sampleRate;
+          const swell = 0.5 + 0.5 * Math.sin(t * Math.PI * 0.5);
+          data[i] = white * 0.035 * swell;
+        }
+      } else {
+        let b0 = 0, b1 = 0, b2 = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99765 * b0 + white * 0.085;
+          b1 = 0.96300 * b1 + white * 0.25;
+          b2 = 0.57000 * b2 + white * 0.9;
+          data[i] = (b0 + b1 + b2) * 0.038;
+        }
       }
 
       rainSource = ctx.createBufferSource();
@@ -1456,7 +1544,7 @@
     }
 
     // -------------------------------------------------------------
-    // (6.5) Feature: KarmaDesk Pro Upgrade Modal & License Activation
+    // (6.5) Feature: KarmaDesk Pro Upgrade Modal, Gumroad Auto-Detection & Hub
     // -------------------------------------------------------------
     const proBtn = document.getElementById('proBtn');
     const proFooterBtn = document.getElementById('proFooterBtn');
@@ -1464,9 +1552,13 @@
     const proOracleBtn = document.getElementById('proOracleBtn');
     const proModal = document.getElementById('proModal');
     const closeProModalBtn = document.getElementById('closeProModalBtn');
+    const closeProActiveBtn = document.getElementById('closeProActiveBtn');
     const activateLicenseBtn = document.getElementById('activateLicenseBtn');
+    const restorePurchaseBtn = document.getElementById('restorePurchaseBtn');
     const licenseKeyInput = document.getElementById('licenseKeyInput');
     const licenseFeedback = document.getElementById('licenseFeedback');
+    const proBuyView = document.getElementById('proBuyView');
+    const proActiveView = document.getElementById('proActiveView');
 
     function openProModal() {
       if (proModal) proModal.classList.remove('hidden');
@@ -1483,6 +1575,7 @@
     });
     if (proOracleBtn) proOracleBtn.addEventListener('click', openProModal);
     if (closeProModalBtn) closeProModalBtn.addEventListener('click', closeProModal);
+    if (closeProActiveBtn) closeProActiveBtn.addEventListener('click', closeProModal);
 
     if (proModal) {
       proModal.addEventListener('click', (e) => {
@@ -1490,22 +1583,163 @@
       });
     }
 
+    // Apply Pro Member Status across the whole UI
+    function applyProStatus(showWelcome = false) {
+      document.body.classList.add('is-pro-member');
+
+      if (proBtn) {
+        proBtn.className = 'px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/35 via-yellow-400/25 to-amber-500/35 border border-zen-gold text-zen-gold font-bold text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(240,206,125,0.6)] cursor-pointer';
+        proBtn.innerHTML = '<span>👑</span><span>Pro Active</span>';
+        proBtn.title = 'KarmaDesk Pro Lifetime Active (Click to manage soundscapes)';
+      }
+
+      if (proFooterBtn) {
+        proFooterBtn.innerHTML = '👑 KarmaDesk Pro Lifetime Active';
+        proFooterBtn.classList.remove('underline');
+      }
+
+      if (proScreensaverBtn) {
+        proScreensaverBtn.innerHTML = '<span>👑 Pro Sanctuary Active</span>';
+        proScreensaverBtn.className = 'liquid-glass flex items-center gap-1 px-3 py-1 rounded-full text-xs text-zen-gold border border-zen-gold/60 shadow-sm cursor-pointer';
+      }
+
+      if (proBuyView && proActiveView) {
+        proBuyView.classList.add('hidden');
+        proActiveView.classList.remove('hidden');
+      }
+
+      updateSoundscapeUI();
+
+      if (showWelcome) {
+        const toast = document.getElementById('milestoneToast');
+        const text = document.getElementById('milestoneText');
+        if (toast && text) {
+          text.textContent = '👑 KarmaDesk Pro Unlocked! Welcome to your Lifetime Sanctuary.';
+          toast.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
+          toast.classList.add('opacity-100', 'translate-y-0');
+
+          setTimeout(playSingingBowl, 150);
+          setTimeout(playCrystalChime, 450);
+
+          setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
+          }, 4500);
+        }
+      }
+    }
+
+    // One-Click Instant Restore for Gumroad Buyers
+    if (restorePurchaseBtn) {
+      restorePurchaseBtn.addEventListener('click', () => {
+        localStorage.setItem('karmadesk_pro_unlocked', 'true');
+        applyProStatus(true);
+        setTimeout(closeProModal, 1200);
+      });
+    }
+
+    // Manual License Key Activation
     if (activateLicenseBtn && licenseKeyInput && licenseFeedback) {
       activateLicenseBtn.addEventListener('click', () => {
         const key = licenseKeyInput.value.trim();
         if (key.length >= 4) {
           localStorage.setItem('karmadesk_pro_unlocked', 'true');
+          localStorage.setItem('karmadesk_license_key', key);
           licenseFeedback.classList.remove('hidden');
           licenseFeedback.textContent = '✓ Pro Lifetime Pass Activated! Thank you for your support.';
-          setTimeout(() => {
-            closeProModal();
-          }, 1800);
+          applyProStatus(true);
+          setTimeout(closeProModal, 1500);
         } else {
           licenseFeedback.classList.remove('hidden');
           licenseFeedback.textContent = 'Please enter a valid Gumroad license key.';
         }
       });
     }
+
+    // Soundscape Switcher Interaction
+    function updateSoundscapeUI() {
+      const active = localStorage.getItem('karmadesk_active_soundscape') || 'rain';
+      document.querySelectorAll('.soundscape-select-btn').forEach(btn => {
+        const sound = btn.dataset.sound;
+        if (sound === active) {
+          btn.className = 'soundscape-select-btn p-2 rounded-xl border border-zen-gold bg-zen-gold/20 text-white flex items-center justify-between transition-all cursor-pointer shadow-sm';
+          const tag = btn.querySelector('span:last-child');
+          if (tag) tag.textContent = '✓ Active';
+        } else {
+          btn.className = 'soundscape-select-btn p-2 rounded-xl border border-white/10 hover:border-zen-gold text-gray-300 hover:text-white flex items-center justify-between transition-all cursor-pointer';
+          const tag = btn.querySelector('span:last-child');
+          if (tag) tag.textContent = sound === 'rain' ? 'FREE' : 'PRO';
+        }
+      });
+    }
+
+    document.querySelectorAll('.soundscape-select-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const sound = btn.dataset.sound;
+        const isPro = localStorage.getItem('karmadesk_pro_unlocked') === 'true';
+        if (!isPro && sound !== 'rain') {
+          openProModal();
+          return;
+        }
+
+        currentSoundscape = sound;
+        localStorage.setItem('karmadesk_active_soundscape', sound);
+        updateSoundscapeUI();
+
+        // Update button text
+        const labels = {
+          rain: 'Rain',
+          snow: 'Snow',
+          thunder: 'Thunder',
+          bamboo: 'Bamboo',
+          ocean: 'Ocean'
+        };
+        if (rainBtnText) rainBtnText.textContent = labels[sound] || 'Rain';
+
+        // If currently playing, crossfade into new soundscape
+        if (isRaining) {
+          stopRainWithFadeOut();
+          setTimeout(startRainWithFadeIn, 1200);
+        }
+      });
+    });
+
+    // Auto-Detect Purchase Redirect from Gumroad via URL params
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isPurchaseRedirect = urlParams.has('pro') ||
+                                 urlParams.has('success') ||
+                                 urlParams.has('license_key') ||
+                                 urlParams.has('order_number') ||
+                                 urlParams.has('sale_id') ||
+                                 urlParams.has('permalink') ||
+                                 urlParams.get('bought') === 'true' ||
+                                 window.location.hash.includes('pro');
+
+      if (isPurchaseRedirect) {
+        localStorage.setItem('karmadesk_pro_unlocked', 'true');
+        const key = urlParams.get('license_key');
+        if (key) localStorage.setItem('karmadesk_license_key', key);
+        window.history.replaceState({}, document.title, window.location.pathname);
+        applyProStatus(true);
+      } else if (localStorage.getItem('karmadesk_pro_unlocked') === 'true') {
+        applyProStatus(false);
+      }
+    } catch(err) {
+      console.warn('Purchase check error:', err);
+    }
+
+    // Listen to Gumroad overlay postMessage events
+    window.addEventListener('message', (event) => {
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data && (data.type === 'gumroad:sale' || data.event === 'sale' || (data.permalink && data.permalink.includes('ijycvm')))) {
+          localStorage.setItem('karmadesk_pro_unlocked', 'true');
+          if (data.license_key) localStorage.setItem('karmadesk_license_key', data.license_key);
+          applyProStatus(true);
+        }
+      } catch(e) {}
+    });
 
     // -------------------------------------------------------------
     // (7) Zen Screensaver Mode (F Key or Double Click)
