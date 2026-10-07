@@ -306,12 +306,24 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-2.5 pointer-events-auto">
+    <!-- Right Controls: Auto-Loop, Daily Oracle, Rain, Fullscreen, Clock -->
+    <div class="flex items-center gap-2 pointer-events-auto">
       <!-- Karma Counter -->
       <div class="flex items-center gap-1.5 px-3 py-1 rounded-full liquid-glass text-xs">
-        <span class="text-gray-300">Mindful Karma:</span>
+        <span class="text-gray-300">Karma:</span>
         <span id="counterNum" class="mono-num font-semibold text-zen-gold tracking-wider text-xs">0</span>
       </div>
+
+      <!-- Feature 1: Auto-Loop Zen Metronome (Inspired by top Chinese Muyu apps) -->
+      <button id="autoLoopBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-gray-300 hover:text-white transition-all cursor-pointer" title="Auto-Resonate loop (hands-free meditation)">
+        <span id="autoLoopDot" class="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
+        <span id="autoLoopText">Auto: Off</span>
+      </button>
+
+      <!-- Feature 2: Daily Oracle / Manifestation Card -->
+      <button id="oracleBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-zen-gold hover:text-white transition-all cursor-pointer shadow-md" title="Draw today's universe affirmation card">
+        <span>🎴 Oracle</span>
+      </button>
 
       <!-- Rain Ambience Toggle (2.5s Smooth Fade In/Out) -->
       <button id="rainToggleBtn" class="liquid-glass flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs text-gray-200 cursor-pointer" title="Toggle gentle mountain rain (2.5s smooth fade)">
@@ -319,8 +331,8 @@
           <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>
           <path d="M8 19v2M8 13v2M12 21v2M12 15v2M16 19v2M16 13v2"/>
         </svg>
-        <span id="rainBtnText" class="font-medium">Rain Ambience</span>
-        <span id="fadeBadge" class="text-[9px] px-1 py-0.2 rounded bg-zen-jade/20 text-zen-jade hidden">Fading</span>
+        <span id="rainBtnText" class="font-medium">Rain</span>
+        <span id="fadeBadge" class="text-[9px] px-1 py-0.2 rounded bg-zen-jade/20 text-zen-jade hidden">Fade</span>
       </button>
 
       <!-- Zen Screensaver Mode (F Key) -->
@@ -531,6 +543,43 @@
     </div>
   </footer>
 
+  <!-- =========================================================================
+       Modals & Overlays (Oracle Card, 108 Milestone Toast, Stealth Clock)
+       ========================================================================= -->
+
+  <!-- Daily Oracle Card Modal -->
+  <div id="oracleModal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4 hidden">
+    <div class="antique-plaque rounded-2xl max-w-sm w-full p-6 text-center relative shadow-2xl border-2 border-[#844c21] flex flex-col items-center">
+      <div class="text-zen-gold/60 text-[10px] tracking-widest uppercase mb-1">❖ Daily Universe Message ❖</div>
+      <h3 class="text-base font-bold text-zen-gold serif-title tracking-wider mt-0.5">Affirmation of the Day</h3>
+      
+      <div class="my-5 p-4 rounded-xl liquid-glass border border-zen-gold/25 w-full">
+        <p id="oracleQuote" class="text-sm text-gray-100 font-serif leading-relaxed italic">
+          "What is meant for you will never pass you by."
+        </p>
+        <span id="oracleTheme" class="inline-block mt-3 text-[10px] px-2.5 py-0.5 rounded-full bg-zen-gold/15 text-zen-gold border border-zen-gold/30">
+          Abundance & Destiny
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3 w-full justify-center">
+        <button id="setOracleToPlaqueBtn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-zen-gold to-yellow-600 text-black font-semibold text-xs tracking-wide hover:brightness-110 shadow-lg transition-all cursor-pointer">
+          ✨ Set to Plaque
+        </button>
+        <button id="closeOracleBtn" class="px-4 py-2 rounded-xl liquid-glass text-gray-300 text-xs hover:text-white transition-all cursor-pointer">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sacred 108 Milestone Toast Notification -->
+  <div id="milestoneToast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-2.5 rounded-full liquid-glass border-2 border-zen-gold/60 shadow-[0_0_40px_rgba(240,206,125,0.7)] flex items-center gap-2.5 text-xs text-zen-gold font-semibold tracking-wider transition-all duration-500 opacity-0 pointer-events-none -translate-y-4">
+    <span class="text-sm">✨</span>
+    <span id="milestoneText">108 Mindful Taps Completed · Inner Peace Restored</span>
+    <span class="text-sm">✨</span>
+  </div>
+
   <!-- Stealth Focus Clock Overlay (Esc) -->
   <div id="stealthOverlay" class="fixed inset-0 bg-[#070b0a] z-50 flex flex-col items-center justify-center hidden cursor-pointer select-none" title="Click anywhere or press Esc to return">
     <div class="text-center">
@@ -664,13 +713,12 @@
       noise.start(now);
     }
 
-    // Soft, airy wind chime tinkle cascade
-    // Soft pentatonic tinkles in gentle breeze
+    // Soft, airy wind chime tinkle cascade (gentle breeze striking tuned bells)
     function playWindChime() {
       const ctx = getAudioContext();
       const now = ctx.currentTime;
       
-      // Tuned pentatonic chords (A5, C6, E6, C6)
+      // Warm pentatonic cascade (A5, C6, E6, C6)
       const tinkleNotes = [
         { freq: 880.0, delay: 0.00, gain: 0.075, decay: 1.1 },
         { freq: 1046.5, delay: 0.08, gain: 0.065, decay: 1.3 },
@@ -683,13 +731,11 @@
         const gainNode = ctx.createGain();
         const filter = ctx.createBiquadFilter();
 
-        // Gentle lowpass filter to remove harsh shrillness
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(1750, now);
         filter.Q.setValueAtTime(1.5, now);
 
         osc.type = 'sine';
-        // Subtle organic micro-detuning
         osc.frequency.setValueAtTime(t.freq + (Math.random() - 0.5) * 1.5, now + t.delay);
 
         gainNode.gain.setValueAtTime(0.0001, now + t.delay);
@@ -813,19 +859,16 @@
         
         this.layer = Math.random(); 
         if (this.layer < 0.45) {
-          // Distant fine rain mist
           this.length = Math.random() * 10 + 6;
           this.speed = Math.random() * 3 + 4;
           this.opacity = Math.random() * 0.14 + 0.06;
           this.width = 0.6;
         } else if (this.layer < 0.8) {
-          // Midground rain streaks
           this.length = Math.random() * 18 + 12;
           this.speed = Math.random() * 6 + 7;
           this.opacity = Math.random() * 0.24 + 0.12;
           this.width = 0.9;
         } else {
-          // Near-window rain
           this.length = Math.random() * 28 + 18;
           this.speed = Math.random() * 9 + 10;
           this.opacity = Math.random() * 0.38 + 0.2;
@@ -870,13 +913,13 @@
       isRaining = !isRaining;
       if (isRaining) {
         rainToggleBtn.classList.add('border-zen-jade', 'text-zen-jade');
-        rainBtnText.textContent = 'Mute Rain';
+        rainBtnText.textContent = 'Mute';
         startRainWithFadeIn();
         initRain();
         renderRain();
       } else {
         rainToggleBtn.classList.remove('border-zen-jade', 'text-zen-jade');
-        rainBtnText.textContent = 'Rain Ambience';
+        rainBtnText.textContent = 'Rain';
         stopRainWithFadeOut();
       }
     });
@@ -884,7 +927,7 @@
     // -------------------------------------------------------------
     // (4) Plaque Synchronization & Resonant Affirmation Feedback
     // -------------------------------------------------------------
-    let tapTotal = parseInt(localStorage.getItem('karmadesk_v9_taps') || '0', 10);
+    let tapTotal = parseInt(localStorage.getItem('karmadesk_v10_taps') || '0', 10);
     const counterDisplay = document.getElementById('counterNum');
     counterDisplay.textContent = tapTotal;
 
@@ -904,12 +947,34 @@
       customWishInput.select();
     });
 
+    // Check Sacred 108 Mindfulness Milestones
+    function checkMilestone(count) {
+      if (count === 108 || (count > 0 && count % 108 === 0) || count === 50 || count === 100) {
+        const toast = document.getElementById('milestoneToast');
+        const text = document.getElementById('milestoneText');
+        text.textContent = `${count} Mindful Taps · Sacred Alignment Restored`;
+        
+        toast.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'translate-y-0');
+        
+        // Gentle dual celebration chord
+        setTimeout(playSingingBowl, 100);
+        setTimeout(playCrystalChime, 350);
+
+        setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0');
+          toast.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none');
+        }, 4000);
+      }
+    }
+
     function triggerResonance(soundFn, defaultAffirmation, colorClass, sourceEl) {
       soundFn();
 
       tapTotal++;
-      localStorage.setItem('karmadesk_v9_taps', tapTotal);
+      localStorage.setItem('karmadesk_v10_taps', tapTotal);
       counterDisplay.textContent = tapTotal;
+      checkMilestone(tapTotal);
 
       // Soft Plaque Golden Aura Shimmer
       zenPlaqueEl.classList.add('scale-[1.04]');
@@ -993,7 +1058,94 @@
     });
 
     // -------------------------------------------------------------
-    // (5) Zen Screensaver Mode (F Key or Double Click)
+    // (5) Feature 1: Auto-Loop Zen Metronome (Inspired by top apps)
+    // -------------------------------------------------------------
+    const autoLoopBtn = document.getElementById('autoLoopBtn');
+    const autoLoopText = document.getElementById('autoLoopText');
+    const autoLoopDot = document.getElementById('autoLoopDot');
+
+    const LOOP_INTERVALS = [null, 2500, 4500, 6500];
+    const LOOP_LABELS = ['Auto: Off', 'Auto: 2.5s', 'Auto: 4.5s', 'Auto: 6.5s'];
+    let currentLoopIdx = 0;
+    let autoLoopTimer = null;
+
+    autoLoopBtn.addEventListener('click', () => {
+      currentLoopIdx = (currentLoopIdx + 1) % LOOP_INTERVALS.length;
+      autoLoopText.textContent = LOOP_LABELS[currentLoopIdx];
+
+      if (autoLoopTimer) {
+        clearInterval(autoLoopTimer);
+        autoLoopTimer = null;
+      }
+
+      const ms = LOOP_INTERVALS[currentLoopIdx];
+      if (ms) {
+        autoLoopDot.className = 'w-1.5 h-1.5 rounded-full bg-zen-jade animate-ping';
+        autoLoopBtn.classList.add('border-zen-jade', 'text-zen-jade');
+        // Immediately trigger once
+        btnBowl.click();
+        autoLoopTimer = setInterval(() => {
+          btnBowl.click();
+        }, ms);
+      } else {
+        autoLoopDot.className = 'w-1.5 h-1.5 rounded-full bg-gray-500';
+        autoLoopBtn.classList.remove('border-zen-jade', 'text-zen-jade');
+      }
+    });
+
+    // -------------------------------------------------------------
+    // (6) Feature 2: Daily Oracle / Manifestation Cards
+    // -------------------------------------------------------------
+    const ORACLE_CARDS = [
+      { quote: "What is meant for you will never pass you by.", theme: "Abundance & Destiny" },
+      { quote: "Let your mind become still like deep mountain water.", theme: "Inner Serenity" },
+      { quote: "Release the need to control the outcome; trust the timing.", theme: "Surrender & Peace" },
+      { quote: "You are worthy of all the abundance the universe holds.", theme: "Wealth & Worthiness" },
+      { quote: "In the midst of chaos, keep stillness alive inside you.", theme: "Calm Strength" },
+      { quote: "Breathe in pure clarity, exhale what no longer serves you.", theme: "Renewal & Release" },
+      { quote: "Every gentle step forward is creating your reality.", theme: "Alignment & Growth" },
+      { quote: "Peace is not the absence of trouble, but the presence of grace.", theme: "Deep Grace" },
+      { quote: "Your energy introduces you before you even speak.", theme: "Vibrational Magnetism" },
+      { quote: "Today, let tension melt like mist into the mountains.", theme: "Effortless Ease" }
+    ];
+
+    const oracleBtn = document.getElementById('oracleBtn');
+    const oracleModal = document.getElementById('oracleModal');
+    const closeOracleBtn = document.getElementById('closeOracleBtn');
+    const setOracleToPlaqueBtn = document.getElementById('setOracleToPlaqueBtn');
+    const oracleQuote = document.getElementById('oracleQuote');
+    const oracleTheme = document.getElementById('oracleTheme');
+
+    let currentOracle = null;
+
+    oracleBtn.addEventListener('click', () => {
+      // Pick random or daily card
+      currentOracle = ORACLE_CARDS[Math.floor(Math.random() * ORACLE_CARDS.length)];
+      oracleQuote.textContent = `"${currentOracle.quote}"`;
+      oracleTheme.textContent = currentOracle.theme;
+      oracleModal.classList.remove('hidden');
+      playWindChime(); // delicate chime welcome
+    });
+
+    closeOracleBtn.addEventListener('click', () => {
+      oracleModal.classList.add('hidden');
+    });
+
+    setOracleToPlaqueBtn.addEventListener('click', () => {
+      if (currentOracle) {
+        customWishInput.value = currentOracle.theme.toUpperCase();
+        syncPlaque();
+        oracleModal.classList.add('hidden');
+        btnBowl.click(); // resonate immediately
+      }
+    });
+
+    oracleModal.addEventListener('click', (e) => {
+      if (e.target === oracleModal) oracleModal.classList.add('hidden');
+    });
+
+    // -------------------------------------------------------------
+    // (7) Zen Screensaver Mode (F Key or Double Click)
     // -------------------------------------------------------------
     function toggleFocusMode() {
       document.body.classList.toggle('zen-focus-mode');
@@ -1006,7 +1158,7 @@
     });
 
     // -------------------------------------------------------------
-    // (6) Stealth Focus Clock (Esc)
+    // (8) Stealth Focus Clock (Esc)
     // -------------------------------------------------------------
     const stealthOverlay = document.getElementById('stealthOverlay');
     let clockTimer = null;
@@ -1032,7 +1184,7 @@
     stealthOverlay.addEventListener('click', toggleStealth);
 
     // -------------------------------------------------------------
-    // (7) Auto-fade UI on Idle
+    // (9) Auto-fade UI on Idle
     // -------------------------------------------------------------
     let idleTimer = null;
     function resetIdle() {
