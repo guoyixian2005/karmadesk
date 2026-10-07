@@ -668,6 +668,12 @@
           Close
         </button>
       </div>
+
+      <div class="mt-4 pt-3 border-t border-white/10 w-full text-center">
+        <button id="proOracleBtn" class="text-[11px] text-zen-gold/80 hover:text-zen-gold transition-colors cursor-pointer flex items-center justify-center gap-1.5 mx-auto">
+          <span>✨</span><span>Unlock 50+ Sacred Oracle Cards & 4 HD Soundscapes (KarmaDesk Pro)</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -703,11 +709,16 @@
         <span id="screensaverRainText" class="font-medium text-[11px] tracking-wide">Outdoor Rain: Active</span>
       </button>
 
-      <!-- Right: Sleek Return to Desk Button -->
-      <button id="exitScreensaverBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-zen-gold/90 hover:text-white transition-all cursor-pointer hover:border-zen-gold/50 shadow-sm" title="Return to desk (Esc)">
-        <span class="text-[11px] tracking-wider uppercase font-medium">Return</span>
-        <kbd class="px-1 py-0.2 rounded bg-white/10 font-mono text-[9px] text-gray-300">Esc</kbd>
-      </button>
+      <!-- Right: Pro & Return Button -->
+      <div class="flex items-center gap-2">
+        <button id="proScreensaverBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-zen-gold hover:text-white border border-zen-gold/40 shadow-sm cursor-pointer" title="KarmaDesk Pro Lifetime Pass ($4.99)">
+          <span>✨ Pro ($4.99)</span>
+        </button>
+        <button id="exitScreensaverBtn" class="liquid-glass flex items-center gap-1.5 px-3 py-1 rounded-full text-xs text-gray-300 hover:text-white transition-all cursor-pointer hover:border-zen-gold/50 shadow-sm" title="Return to desk (Esc)">
+          <span class="text-[11px] tracking-wider uppercase font-medium">Return</span>
+          <kbd class="px-1 py-0.2 rounded bg-white/10 font-mono text-[9px] text-gray-300">Esc</kbd>
+        </button>
+      </div>
     </div>
 
     <!-- Center Zone: Atmospheric Clock, 4-7-8 Breathing Orb & Zen Quote -->
@@ -1433,6 +1444,8 @@
     // -------------------------------------------------------------
     const proBtn = document.getElementById('proBtn');
     const proFooterBtn = document.getElementById('proFooterBtn');
+    const proScreensaverBtn = document.getElementById('proScreensaverBtn');
+    const proOracleBtn = document.getElementById('proOracleBtn');
     const proModal = document.getElementById('proModal');
     const closeProModalBtn = document.getElementById('closeProModalBtn');
     const activateLicenseBtn = document.getElementById('activateLicenseBtn');
@@ -1448,6 +1461,11 @@
 
     if (proBtn) proBtn.addEventListener('click', openProModal);
     if (proFooterBtn) proFooterBtn.addEventListener('click', openProModal);
+    if (proScreensaverBtn) proScreensaverBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openProModal();
+    });
+    if (proOracleBtn) proOracleBtn.addEventListener('click', openProModal);
     if (closeProModalBtn) closeProModalBtn.addEventListener('click', closeProModal);
 
     if (proModal) {
