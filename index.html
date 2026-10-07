@@ -1502,7 +1502,7 @@
           ocean: 'Deep Ocean'
         };
         const title = labels[currentSoundscape] || 'Outdoor Rain';
-        screensaverRainText.textContent = active ?  : ;
+        screensaverRainText.textContent = active ? (title + ': Active') : (title + ': Paused');
         screensaverRainDot.className = active ? 'w-1.5 h-1.5 rounded-full bg-zen-jade animate-pulse' : 'w-1.5 h-1.5 rounded-full bg-gray-500';
       }
     }
